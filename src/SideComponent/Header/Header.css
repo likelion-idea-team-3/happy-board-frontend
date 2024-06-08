@@ -1,0 +1,42 @@
+.Header-Container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+}
+
+.Logo {
+}
+
+.Nav-Menu ul {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.Nav-Menu ul li {
+  margin: 0 15px;
+}
+
+.Nav-Menu ul li a {
+  text-decoration: none;
+  color: black;
+  font-size: 18px;
+}
+
+.Nav-Menu ul li a:hover {
+  text-decoration: underline;
+}
+
+.Search-Bar {
+  position: relative;
+}
+
+.Search-Bar input {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+}

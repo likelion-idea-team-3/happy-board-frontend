@@ -1,9 +1,13 @@
 import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import MainPage from "./Page/MainPage/MainPage";
 
 function App() {
   return (
     <>
-      <h1>긍정 게시판 프론트 엔드 화이팅</h1>
+      <Routes>
+        <Route exact path="/" element={<MainPage />} />
+      </Routes>
     </>
   );
 }
