@@ -12,13 +12,13 @@ function Header() {
         <nav className="Nav-Menu">
           <ul>
             <li>
-              <Link to="/community">게시판</Link>
+              <Link to="/">게시판</Link>
             </li>
             <li>
-              <Link to="/more">더보기</Link>
+              <Link to="/">더보기</Link>
             </li>
             <li>
-              <Link to="/login">로그인</Link>
+              <Link to="/">로그인</Link>
             </li>
           </ul>
         </nav>
