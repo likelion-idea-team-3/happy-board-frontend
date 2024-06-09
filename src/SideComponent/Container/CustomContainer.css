@@ -1,0 +1,53 @@
+.custom-container {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 0px 25px 10px 25px;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 10px;
+  width: calc(30% - 20px);
+  height: 300px;
+  min-width: 400px;
+  box-sizing: border-box;
+}
+
+.custom-container .post-top {
+  text-align: left;
+}
+
+.custom-container .post-center {
+  margin: 40px 0;
+}
+
+.custom-container .post-bottom {
+  margin-top: 90px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.custom-container .post-bottom p {
+  margin: 0 10px;
+}
+
+/* 화면 크기가 1200px 이상일 때: 한 행에 3개 */
+@media (min-width: 1200px) {
+  .custom-container {
+    width: calc(30% - 20px);
+  }
+}
+
+/* 화면 크기가 768px 이상 1199px 이하일 때: 한 행에 2개 */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .custom-container {
+    width: calc(45% - 20px);
+  }
+}
+
+/* 화면 크기가 767px 이하일 때: 한 행에 1개 */
+@media (max-width: 767px) {
+  .custom-container {
+    width: calc(100% - 20px);
+    margin: 0 auto 20px;
+  }
+}
