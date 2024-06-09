@@ -1,0 +1,59 @@
+.MainBoard-Container {
+  height: 900px;
+  width: 80%;
+  margin: 10px auto;
+  background-color: white;
+  user-select: none;
+  display: flex;
+}
+
+.MainBoard-Container .Container {
+  width: 330px;
+  height: 300px;
+  padding: 20px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+}
+
+.MainBoard-Container .Container .Main {
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.MainBoard-Container .Container .Secondary {
+  font-size: 16px;
+}
+
+.MainBoard-Container .Container button {
+  border: 2px solid white;
+  margin-top: 30px;
+  border-radius: 10px;
+  padding: 10px 40px;
+  color: white;
+  background-color: black;
+  font-size: 16px;
+}
+
+.MainBoard-Container .Boards {
+  margin-left: 10px;
+  flex: 1;
+}
+
+.MainBoard-Container .Boards ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1400px) {
+  .MainBoard-Container {
+    flex-direction: column;
+  }
+
+  .MainBoard-Container .Container {
+    width: 100%;
+    margin-bottom: 20px; /* 각 컨테이너 사이에 간격을 주기 위해 추가 */
+  }
+}

@@ -1,12 +1,12 @@
 import "./App.css";
+import SignupForm from './components/SignupForm/SignupForm';
 
-function App() {
-  return (
-    <>
-      <h1>긍정 게시판 프론트 엔드 화이팅</h1>
-      <p>Github Desktop Test</p>
-    </>
-  );
-}
+const App = () => {
+    return (
+        <div className="App">
+            <SignupForm />
+        </div>
+    );
+};
 
 export default App;
