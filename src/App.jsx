@@ -1,15 +1,12 @@
-import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import MainPage from "./Page/MainPage/MainPage";
+import React from "react";
+import SignupForm from "./components/SignupForm/SignupForm";
 
-function App() {
+const App = () => {
   return (
-    <>
-      <Routes>
-        <Route exact path="/" element={<MainPage />} />
-      </Routes>
-    </>
+    <div className="App">
+      <SignupForm />
+    </div>
   );
-}
+};
 
 export default App;
