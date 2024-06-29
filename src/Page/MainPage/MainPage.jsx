@@ -1,15 +1,15 @@
 import React from "react";
 import "./MainPage.css";
-import Header from "../../SideComponent/Header/Header";
 import MainTop from "./MainTop";
 import MainBoard from "./MainBoard";
+import MainSection from "./MainSection";
 
 function MainPage() {
   return (
     <>
-      <Header />
       <MainTop />
       <MainBoard />
+      <MainSection/>
     </>
   );
 }

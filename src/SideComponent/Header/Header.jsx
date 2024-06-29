@@ -3,11 +3,12 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 
 function Header() {
+
   return (
     <>
       <div className="Header-Container">
         <div className="Logo">
-          <Link to="/">로고들어갈 자리</Link>
+          <Link to="/">긍정 게시판</Link>
         </div>
         <nav className="Nav-Menu">
           <ul>
@@ -17,7 +18,11 @@ function Header() {
             <li>
               <Link to="/">더보기</Link>
             </li>
-            <li>
+          </ul>
+        </nav>
+        <nav className="Nav-Menu-Login">
+          <ul>
+          <li>
               <Link to="/">로그인</Link>
             </li>
           </ul>

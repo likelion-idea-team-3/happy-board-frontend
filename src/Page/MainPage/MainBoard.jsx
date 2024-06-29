@@ -9,14 +9,14 @@ function MainBoard() {
       <div className="MainBoard-Container">
         <div className="Container">
           <div className="Main">
-            <p>누구나 참여 가능한</p>
+            <p>모두가 참여 가능한</p>
             <p>긍정 게시판</p>
           </div>
           <div className="Secondary">
             <p>매일매일 새롭게 업로드 되는</p>
             <p>모두의 긍정 에너지를 느껴보세요</p>
           </div>
-          <button>목록 보기</button>
+          <button><span>목록 보기</span></button>
         </div>
         <div className="Boards">
           <ul>

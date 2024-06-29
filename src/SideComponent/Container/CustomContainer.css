@@ -8,16 +8,40 @@
   border-radius: 10px;
   width: calc(30% - 20px);
   height: 300px;
-  min-width: 400px;
+  min-width: 360px;
+  max-width: 450px;
   box-sizing: border-box;
+}
+
+.custom-container .post-center{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .custom-container .post-top {
   text-align: left;
 }
 
+.post__date {
+  font-size: 13px;
+}
+
+.post__author {
+  font-size: 16px;
+  color: grey;
+}
+
+.post__title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
 .custom-container .post-center {
   margin: 40px 0;
+  font-weight: 500;
+  font-size: 20px;
+  
 }
 
 .custom-container .post-bottom {
@@ -28,23 +52,22 @@
 
 .custom-container .post-bottom p {
   margin: 0 10px;
+  font-weight: 300;
+  font-size: 16px;
 }
 
-/* 화면 크기가 1200px 이상일 때: 한 행에 3개 */
 @media (min-width: 1200px) {
   .custom-container {
     width: calc(30% - 20px);
   }
 }
 
-/* 화면 크기가 768px 이상 1199px 이하일 때: 한 행에 2개 */
 @media (min-width: 768px) and (max-width: 1199px) {
   .custom-container {
     width: calc(45% - 20px);
   }
 }
 
-/* 화면 크기가 767px 이하일 때: 한 행에 1개 */
 @media (max-width: 767px) {
   .custom-container {
     width: calc(100% - 20px);

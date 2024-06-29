@@ -1,14 +1,14 @@
 .MainBoard-Container {
-  height: 900px;
-  width: 80%;
+  width: 100%;
   margin: 10px auto;
-  background-color: white;
+  background-color: #67c774;
   user-select: none;
   display: flex;
+  height: 100vh;
 }
 
 .MainBoard-Container .Container {
-  width: 330px;
+  min-width: 330px;
   height: 300px;
   padding: 20px;
   background-color: black;
@@ -35,6 +35,12 @@
   font-size: 16px;
 }
 
+.MainBoard-Container .Container span 
+{
+  font-family: "Nanum Gothic", sans-serif;
+}
+
+
 .MainBoard-Container .Boards {
   margin-left: 10px;
   flex: 1;
@@ -45,15 +51,4 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-}
-
-@media (max-width: 1400px) {
-  .MainBoard-Container {
-    flex-direction: column;
-  }
-
-  .MainBoard-Container .Container {
-    width: 100%;
-    margin-bottom: 20px; /* 각 컨테이너 사이에 간격을 주기 위해 추가 */
-  }
 }

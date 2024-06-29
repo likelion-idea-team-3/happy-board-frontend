@@ -1,14 +1,15 @@
 .MainTop-Container {
-  height: 800px;
+  height: 100vh;
   background-image: url("/Components/MainTop.png");
   background-size: cover;
   background-position: center;
   text-align: center;
   user-select: none;
+  font-family: "Nanum Gothic", sans-serif;
 }
 
 .MainTop-Container .Top {
-  padding: 50px;
+  padding: 130px;
   opacity: 0;
   transform: translateY(100px);
   transition: opacity 1s ease-out, transform 1s ease-out;
@@ -24,6 +25,7 @@
   font-size: 80px;
   font-weight: 600;
   color: black;
+
 }
 
 .MainTop-Container .Center {
@@ -41,7 +43,7 @@
 .MainTop-Container .Center p {
   margin-top: 10px;
   font-size: 26px;
-  font-weight: 500;
+  font-weight: 900;
   color: black;
 }
 
@@ -55,12 +57,17 @@
   border-radius: 10px;
   transition: color 0.3s, background-color 0.3s;
   font-weight: 100;
+  font-family: "Nanum Gothic", sans-serif;
 }
 
 .MainTop-Container button:hover {
   color: black;
   background-color: white;
   cursor: pointer;
+}
+
+.animate {
+  animation: slideIn 1s forwards;
 }
 
 @keyframes slideIn {

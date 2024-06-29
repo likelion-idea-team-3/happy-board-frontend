@@ -16,8 +16,7 @@ function MainTop() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("animate");
-        } else {
-          entry.target.classList.remove("animate");
+          observer.unobserve(entry.target);
         }
       });
     };
@@ -46,7 +45,8 @@ function MainTop() {
         <div className="Center" ref={centerRef}>
           <p>긍정 에너지가 필요한 당신에게</p>
           <p>오늘도 긍정 한줄기를 전해드릴게요</p>
-          <button>지금 시작하기</button>
+          <button>함께 시작하기
+          </button>
         </div>
       </div>
     </>

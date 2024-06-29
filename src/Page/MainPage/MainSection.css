@@ -1,0 +1,72 @@
+.main-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+  background-color: #f77c7c;
+}
+
+.image-container {
+  flex: 0 0 50%;
+  height: 100%;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.text-container {
+  flex: 1;
+  padding: 50px;
+  color: white;
+}
+
+/* 태블릿 레이아웃 */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .main-section {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .image-container {
+    height: 50vh;
+  }
+
+  .image-container img {
+    object-fit: contain;
+  }
+
+  .text-container {
+    flex: 1;
+    padding: 30px;
+    color: color;
+    width: 100%; 
+  }
+}
+
+/* 모바일 레이아웃 */
+@media (max-width: 767px) {
+  .main-section {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .image-container {
+    flex: 0 0 100%;
+    height: 40vh;
+  }
+
+  .image-container img {
+    object-fit: contain;
+  }
+
+  .text-container {
+    flex: 1;
+    padding: 20px;
+    color: white;
+    width: 100%;
+  }
+}

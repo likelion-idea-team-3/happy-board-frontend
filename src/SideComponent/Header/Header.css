@@ -2,12 +2,44 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
-  background-color: white;
-  color: black;
+  padding: 10px 100px;
+  background-color: black;
+  color: white;
+  user-select: none;
+  position: fixed;
+  width: 95%;
+  top: 0;
+  z-index: 1000;
+  border-radius: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 100;
 }
 
-.Logo {
+.Header-Container .Logo {
+  font-family: 'Ownglyph_eunbyul21-Rg', sans-serif;
+  font-size: 35px;
+  flex: 1; 
+  text-align: left;
+}
+
+.Header-Container a {
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+
+.Header-Container a:focus,
+.Header-Container a:active {
+  outline: none;
+  text-decoration: none;
+}
+
+.Nav-Menu {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  
 }
 
 .Nav-Menu ul {
@@ -15,6 +47,7 @@
   display: flex;
   margin: 0;
   padding: 0;
+  
 }
 
 .Nav-Menu ul li {
@@ -23,20 +56,27 @@
 
 .Nav-Menu ul li a {
   text-decoration: none;
-  color: black;
-  font-size: 18px;
+  color: white;
+  font-size: 20px;
 }
 
 .Nav-Menu ul li a:hover {
-  text-decoration: underline;
+  color: #62DFA6;
 }
 
-.Search-Bar {
-  position: relative;
+.Nav-Menu-Login {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
-.Search-Bar input {
-  padding: 5px 10px;
-  border: none;
-  border-radius: 3px;
+.Nav-Menu-Login ul {
+  list-style: none;
+}
+
+@font-face {
+  font-family: 'Ownglyph_eunbyul21-Rg';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-2@1.0/Ownglyph_eunbyul21-Rg.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
 }
