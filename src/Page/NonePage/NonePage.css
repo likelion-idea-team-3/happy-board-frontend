@@ -1,0 +1,32 @@
+.NotFound-Container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.NotFound-Container h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.NotFound-Container p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.NotFound-Container a {
+  text-decoration: none;
+  font-size: 18px;
+  border: 1px solid #62DFA6;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.NotFound-Container a:hover {
+  background-color: #62DFA6;
+  color: black;
+}
