@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import { FiMenu } from "react-icons/fi";
 
 function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   return (
     <>
@@ -10,7 +16,10 @@ function Header() {
         <div className="Logo">
           <Link to="/">긍정 게시판</Link>
         </div>
-        <nav className="Nav-Menu">
+        <div className="Menu-Icon" onClick={toggleMenu}>
+          <FiMenu />
+        </div>
+        <nav className={`Nav-Menu ${menuOpen ? 'open' : ''}`}>
           <ul>
             <li>
               <Link to="/">게시판</Link>
@@ -22,7 +31,7 @@ function Header() {
         </nav>
         <nav className="Nav-Menu-Login">
           <ul>
-          <li>
+            <li>
               <Link to="/">로그인</Link>
             </li>
           </ul>

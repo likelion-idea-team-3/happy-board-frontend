@@ -25,7 +25,8 @@
   font-size: 80px;
   font-weight: 600;
   color: black;
-
+  font-family: 'yg-jalnan', sans-serif;
+  white-space: nowrap;
 }
 
 .MainTop-Container .Center {
@@ -111,7 +112,7 @@
 
 @media (max-width: 767px) {
   .MainTop-Container .Top {
-    padding: 20px;
+    padding: 150px 0px;
   }
 
   .MainTop-Container .Top p {
@@ -119,7 +120,7 @@
   }
 
   .MainTop-Container .Center {
-    margin-top: 50px;
+    margin: 50px 0px;
   }
 
   .MainTop-Container .Center p {

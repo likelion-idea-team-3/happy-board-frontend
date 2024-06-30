@@ -39,8 +39,8 @@ function MainTop() {
     <>
       <div className="MainTop-Container">
         <div className="Top" ref={topRef}>
-          <p>긍정게시판은</p>
-          <p>여러분을 기다리고 있습니다</p>
+          <p>긍정게시판은 언제나</p>
+          <p>누구에게나 열려 있습니다</p>
         </div>
         <div className="Center" ref={centerRef}>
           <p>긍정 에너지가 필요한 당신에게</p>

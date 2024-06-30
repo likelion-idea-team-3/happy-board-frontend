@@ -7,7 +7,7 @@
   color: white;
   user-select: none;
   position: fixed;
-  width: 95%;
+  width: 100%;
   top: 0;
   z-index: 1000;
   border-radius: 10px;
@@ -17,7 +17,7 @@
 }
 
 .Header-Container .Logo {
-  font-family: 'Ownglyph_eunbyul21-Rg', sans-serif;
+  font-family: 'yg-jalnan', sans-serif;
   font-size: 35px;
   flex: 1; 
   text-align: left;
@@ -51,7 +51,8 @@
 }
 
 .Nav-Menu ul li {
-  margin: 0 15px;
+  margin: 0 60px;
+  position: relative;
 }
 
 .Nav-Menu ul li a {
@@ -60,8 +61,26 @@
   font-size: 20px;
 }
 
+.Nav-Menu-Login ul li a:hover,
 .Nav-Menu ul li a:hover {
-  color: #62DFA6;
+  color: #D3D3D3;
+}
+
+.Nav-Menu ul li:hover::after {
+  transform: scaleX(1);
+}
+
+.Nav-Menu ul li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px; 
+  height: 3px; 
+  background-color: white;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease-in-out;
 }
 
 .Nav-Menu-Login {
@@ -74,9 +93,50 @@
   list-style: none;
 }
 
+.Menu-Icon {
+  display: none;
+}
+
 @font-face {
-  font-family: 'Ownglyph_eunbyul21-Rg';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2405-2@1.0/Ownglyph_eunbyul21-Rg.woff2') format('woff2');
-  font-weight: bold;
+  font-family: 'yg-jalnan';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+  font-weight: normal;
   font-style: normal;
+}
+
+@media (max-width: 1200px) {
+  .Nav-Menu, .Nav-Menu-Login {
+    display: none;
+  }
+
+  .Menu-Icon {
+    display: block;
+    font-size: 35px;
+  }
+
+  .Menu-Icon:hover{
+    color: #D3D3D3;
+    cursor: pointer;
+  }
+
+  .Nav-Menu.open, .Nav-Menu-Login.open {
+    display: flex;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    padding: 10px 0;
+    z-index: 999;
+    border-radius: 10px;
+  }
+
+  .Nav-Menu ul, .Nav-Menu-Login ul {
+    align-items: center;
+  }
+
+  .Nav-Menu ul li, .Nav-Menu-Login ul li {
+    margin: 0px 20px;
+    padding: 0 10px;
+  }
 }
