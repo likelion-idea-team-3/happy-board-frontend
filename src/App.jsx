@@ -12,21 +12,21 @@ import LoginPage from "./Page/TestLoginPage/LoginPage";
 import SignupPage from "./Page/TestLoginPage/SignupPage";
 
 function App() {
-  return (
-    <>
-      <Header />
-      <Routes>
-        <Route exact path="/" element={<MainPage />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/example" element={<DetailPost />} />
-        <Route path="/more" element={<MoreNews />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup1" element={<SignupPage/>} />
-        <Route path="*" element={<NonePage/>} />
-      </Routes>
-      <Footer/>
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <Routes>
+                <Route exact path="/" element={<MainPage />} />
+                <Route path="/signup" element={<SignupForm />} />
+                <Route path="/example" element={<DetailPost />} />
+                <Route path="/more" element={<MoreNews />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup1" element={<SignupPage />} />
+                <Route path="*" element={<NonePage />} />
+            </Routes>
+            <Footer />
+        </>
+    );
 }
 
 export default App;
