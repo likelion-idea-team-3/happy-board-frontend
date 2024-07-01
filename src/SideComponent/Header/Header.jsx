@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
+import { useAuth } from './AuthContext';
 
 function Header() {
+  const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -25,15 +27,21 @@ function Header() {
               <Link to="/">게시판</Link>
             </li>
             <li>
-              <Link to="/">더보기</Link>
+              <Link to="/more">더보기</Link>
             </li>
           </ul>
         </nav>
         <nav className="Nav-Menu-Login">
           <ul>
-            <li>
-              <Link to="/">로그인</Link>
-            </li>
+            {user ? (
+              <li>
+                {user.name}님 <button onClick={logout}>로그아웃</button>
+              </li>
+            ) : (
+              <li>
+                <Link to="/login">로그인</Link>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
