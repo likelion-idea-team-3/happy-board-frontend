@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import BirdImg from '/Users/minwoo/Documents/GitHub/happy-board-frontend/src/Page/PostBoard/testsrc/bird.jpeg';
 import './ArticleComponent.css';
 
 function ArticleComponent(props) {
@@ -30,8 +31,14 @@ function ArticleComponent(props) {
     );
 }
 
+ArticleComponent.defaultProps = {
+    imgSrc: BirdImg, // 여기에 사용할 기본 이미지의 URL을 넣으세요
+    showEditButton: false,
+    onEdit: () => {},
+};
+
 ArticleComponent.propTypes = {
-    imgSrc: PropTypes.string.isRequired,
+    imgSrc: PropTypes.string,
     category: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     postedDay: PropTypes.string.isRequired,

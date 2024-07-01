@@ -7,7 +7,7 @@ function WriteArticle() {
     const categories = [...new Set(DummyArticles.map((article) => article.category))];
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('카테고리 없음');
     const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
