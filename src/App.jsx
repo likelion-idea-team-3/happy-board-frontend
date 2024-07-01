@@ -6,6 +6,7 @@ import MainPage from "./Page/MainPage/MainPage";
 import Header from "./SideComponent/Header/Header";
 import Footer from "./SideComponent/Footer/Footer";
 import NonePage from "./Page/NonePage/NonePage";
+import DetailPost from "./Page/DetailPostPage/DetailPost";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route exact path="/" element={<MainPage />} />
         <Route path="/signup" element={<SignupForm />} />
+        <Route path="/example" element={<DetailPost/>}/>
         <Route path="*" element={<NonePage/>} />
       </Routes>
       <Footer/>
