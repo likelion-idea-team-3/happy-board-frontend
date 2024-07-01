@@ -1,24 +1,72 @@
 .MainBoard-Container {
-  height: 900px;
-  width: 80%;
-  margin: 10px auto;
-  background-color: white;
-  user-select: none;
-  display: flex;
+  width: 100%;
 }
 
-.MainBoard-Container .Container {
-  width: 330px;
+.MainBoard-title,
+.MainBoard-top {
+  width: 100%;
+  text-align: center;
+  align-items: center;
+}
+
+.MainBoard-top {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.MainBoard-top.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.MainBoard-top p {
+  font-size: 30px;
+  font-weight: 100;
+  font-family: 'yg-jalnan', sans-serif;
+  color:  grey;
+}
+
+.sortby-new-post {
+  width: 100%;
+  margin: 0 auto;
+  user-select: none;
+}
+
+.sortby-new-post ul {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.sortby-new-post ul li {
+  margin: 40px 40px;
+
+}
+
+.view-more {
+  text-align: end;
+  color: grey;
+  width: 90%;
+  cursor: pointer;
+}
+
+/* .MainBoard-Container .Container {
+  width: 500px;
   height: 300px;
-  padding: 20px;
-  background-color: black;
+  padding: 10px;
+  background-color: #8596B4;
   color: white;
   border-radius: 10px;
+  margin: 30px;
 }
 
 .MainBoard-Container .Container .Main {
   font-size: 36px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .MainBoard-Container .Container .Secondary {
@@ -31,29 +79,11 @@
   border-radius: 10px;
   padding: 10px 40px;
   color: white;
-  background-color: black;
+  background-color: #8596B4;
   font-size: 16px;
 }
 
-.MainBoard-Container .Boards {
-  margin-left: 10px;
-  flex: 1;
-}
-
-.MainBoard-Container .Boards ul {
-  list-style-type: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 1400px) {
-  .MainBoard-Container {
-    flex-direction: column;
-  }
-
-  .MainBoard-Container .Container {
-    width: 100%;
-    margin-bottom: 20px; /* 각 컨테이너 사이에 간격을 주기 위해 추가 */
-  }
-}
+.MainBoard-Container .Container span 
+{
+  font-family: "Nanum Gothic", sans-serif;
+} */

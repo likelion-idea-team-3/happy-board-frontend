@@ -23,6 +23,14 @@ const posts = [
     likes: 54,
     views: 143,
   },
+  {
+    date: "2024-06-04",
+    author: "작성자4",
+    title: "나만의 일기",
+    content: "나의 행복했던 오늘 하루",
+    likes: 123,
+    views: 255,
+  },
 ];
 
 export default posts;

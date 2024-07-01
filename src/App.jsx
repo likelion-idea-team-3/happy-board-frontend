@@ -10,6 +10,8 @@ import DetailPost from "./Page/DetailPostPage/DetailPost";
 import MoreNews from "./Page/MorePage/MoreNews";
 import LoginPage from "./Page/TestLoginPage/LoginPage";
 import SignupPage from "./Page/TestLoginPage/SignupPage";
+import MainPostBoard from "./Page/PostBoard/MainPostBoard";
+import EditArticle from "./Page/PostBoard/EditArticle";
 
 function App() {
     return (
@@ -18,10 +20,11 @@ function App() {
             <Routes>
                 <Route exact path="/" element={<MainPage />} />
                 <Route path="/signup" element={<SignupForm />} />
-                <Route path="/example" element={<DetailPost />} />
                 <Route path="/more" element={<MoreNews />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup1" element={<SignupPage />} />
+                <Route path="/post" element={<MainPostBoard />} />
+                <Route path="/edit" element={<EditArticle />} />
                 <Route path="*" element={<NonePage />} />
             </Routes>
             <Footer />
