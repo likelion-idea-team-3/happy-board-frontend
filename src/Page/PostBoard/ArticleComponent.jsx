@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import BirdImg from '/Users/minwoo/Documents/GitHub/happy-board-frontend/src/Page/PostBoard/testsrc/bird.jpeg';
-import './ArticleComponent.css';
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import BirdImg from "./testsrc/bird.jpeg";
+import "./ArticleComponent.css";
 
 function ArticleComponent(props) {
     return (
         <>
             <div className="articleComponent">
-                <Link to="#" style={{ textDecoration: 'none' }}>
+                <Link to="#" style={{ textDecoration: "none" }}>
                     <div className="imgbox">
                         <img src={props.imgSrc} alt="article" />
                     </div>
@@ -15,7 +15,10 @@ function ArticleComponent(props) {
                         <div className="textcategori">{props.category}</div>
                         <div className="textheader">{props.title}</div>
                         <div className="liked">
-                            <img src="https://img.icons8.com/ios/50/hearts--v1.png" alt="hearts--v1" />
+                            <img
+                                src="https://img.icons8.com/ios/50/hearts--v1.png"
+                                alt="hearts--v1"
+                            />
                             <div className="likedCount">{props.liked}</div>
                         </div>
                         <div className="postedDay">{props.postedDay}</div>
