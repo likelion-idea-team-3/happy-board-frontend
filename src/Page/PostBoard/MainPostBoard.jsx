@@ -1,87 +1,89 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import ArticleComponent from './ArticleComponent';
-import birdImage from '/Users/minwoo/Documents/GitHub/happy-board-frontend/src/Page/PostBoard/testsrc/bird.jpeg';
+import DummyArticles from './DummyArticles';
 import './MainPostBoard.css';
-import MovePage from './MovePage';
-import Header from '/Users/minwoo/Documents/GitHub/happy-board-frontend/src/SideComponent/Header/Header.jsx';
+
+const ARTICLES_PER_PAGE = 8;
 
 function MainPostBoard() {
+    const [selected, setSelected] = React.useState(0);
+    const [articles, setArticles] = React.useState(DummyArticles);
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const loginedId = 1; // Example logged-in user ID
+    const navigate = useNavigate();
+
+    function startSort(index) {
+        setSelected(index);
+
+        if (index === 0) {
+            const sortedArticles = [...articles].sort((a, b) => new Date(b.postedDay) - new Date(a.postedDay));
+            setArticles(sortedArticles);
+        } else if (index === 1) {
+            const sortedArticles = [...articles].sort((a, b) => b.viewed - a.viewed);
+            setArticles(sortedArticles);
+        } else if (index === 2) {
+            const sortedArticles = [...articles].sort((a, b) => b.liked - a.liked);
+            setArticles(sortedArticles);
+        }
+    }
+
+    const indexOfLastArticle = currentPage * ARTICLES_PER_PAGE;
+    const indexOfFirstArticle = indexOfLastArticle - ARTICLES_PER_PAGE;
+    const currentArticles = articles.slice(indexOfFirstArticle, indexOfLastArticle);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const handleEdit = (articleId) => {
+        // Navigate to edit page or perform edit action
+        navigate(`/edit/${articleId}`);
+    };
+
     return (
         <>
-            <Header />
+            <div className="sortContainer">
+                <button className={`sortBtn ${selected === 0 ? 'active' : ''}`} onClick={() => startSort(0)}>
+                    최신순
+                </button>
+                <button className={`sortBtn ${selected === 1 ? 'active' : ''}`} onClick={() => startSort(1)}>
+                    조회순
+                </button>
+                <button className={`sortBtn ${selected === 2 ? 'active' : ''}`} onClick={() => startSort(2)}>
+                    좋아요순
+                </button>
+            </div>
             <div className="outercontainer">
-                <h2>추천 게시물</h2>
-                <div className="mainArticles">
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트1'}
-                            title={'제목1'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트2'}
-                            title={'제목2'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
-                </div>
-                <h2>그 외 게시물</h2>
                 <div className="otherArticles">
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트1'}
-                            title={'제목1'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트2'}
-                            title={'제목2'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트2'}
-                            title={'제목2'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트1'}
-                            title={'제목1'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트2'}
-                            title={'제목2'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
-                    <div className="item">
-                        <ArticleComponent
-                            imgSrc={birdImage}
-                            category={'테스트2'}
-                            title={'제목2'}
-                            postedDay={'2024.00.00'}
-                        ></ArticleComponent>
-                    </div>
+                    {currentArticles.map((article) => (
+                        <div key={article.id} className="item">
+                            <ArticleComponent
+                                imgSrc={article.imgSrc}
+                                category={article.category}
+                                title={article.title}
+                                liked={article.liked}
+                                postedDay={article.postedDay}
+                                showEditButton={loginedId === article.id}
+                                onEdit={() => handleEdit(article.id)}
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
-            <div className="movepage">
-                <MovePage />
+            <div className="addArticlesContainer">
+                <button className="writeBtn" onClick={() => navigate('/write')}>
+                    글쓰기
+                </button>
+            </div>
+            <div className="pagination">
+                {Array.from({ length: Math.ceil(articles.length / ARTICLES_PER_PAGE) }, (_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => paginate(index + 1)}
+                        className={currentPage === index + 1 ? 'active' : ''}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
             </div>
         </>
     );

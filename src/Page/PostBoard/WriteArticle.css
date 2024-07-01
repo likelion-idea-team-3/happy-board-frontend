@@ -1,0 +1,109 @@
+/* 기본 스타일 설정 */
+.selectCategori {
+    margin-bottom: 20px;
+}
+
+.typeArea {
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 제목 작성란 스타일 */
+.writeHeader,
+.writePara {
+    margin: 20px 0;
+}
+
+.writeHeader input,
+.writePara textarea,
+.writePara .contentEditable {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+/* 입력 영역 스타일 */
+.writePara .editorToolbar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.writePara .editorToolbar button,
+.writePara .editorToolbar .fileInputLabel {
+    background-color: #e7e7e7;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-right: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.writePara .editorToolbar button:hover,
+.writePara .editorToolbar .fileInputLabel:hover {
+    background-color: #d4d4d4;
+    transform: scale(1.05);
+}
+
+.writePara .editorToolbar input[type='file'] {
+    display: none;
+}
+
+.writePara .contentEditable {
+    min-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    background-color: #fff;
+}
+
+/* 제출 버튼 스타일 */
+input[type='submit'] {
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 20px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+input[type='submit']:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* 아이콘 이미지 스타일 */
+.boldimg,
+.italicimg,
+.underlineimg,
+.colorimg,
+.alignleftimg,
+.aligncenterimg,
+.alignrightimg {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+#category {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+}
