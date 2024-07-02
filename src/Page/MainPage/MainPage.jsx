@@ -5,17 +5,17 @@ import MainBoard from "./MainBoard";
 import MainSection from "./MainSection";
 
 function MainPage() {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
-  return (
-    <>
-      <MainTop />
-      <MainBoard />
-      <MainSection />
-    </>
-  );
+    return (
+        <>
+            <MainTop />
+            <MainBoard />
+            <MainSection />
+        </>
+    );
 }
 
 export default MainPage;
