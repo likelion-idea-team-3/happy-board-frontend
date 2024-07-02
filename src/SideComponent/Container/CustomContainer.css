@@ -1,56 +1,62 @@
 .custom-container {
-  background-color: white;
-  border: 1px solid #ddd;
-  padding: 20px;
-  margin: 0px 25px 10px 25px;
-  text-align: center;
-  font-size: 18px;
-  border-radius: 10px;
-  height: 300px;
-  min-width: 330px;
-  max-width: 330px;
-  box-sizing: border-box;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 0px 25px 10px 25px;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 10px;
+    height: 300px;
+    min-width: 330px;
+    max-width: 330px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.custom-container p{
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.custom-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.custom-container p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .custom-container .post-top {
-  text-align: left;
+    text-align: left;
 }
 
 .post__date {
-  font-size: 13px;
+    font-size: 13px;
 }
 
 .post__author {
-  font-size: 16px;
-  color: grey;
+    font-size: 16px;
+    color: grey;
 }
 
 .post__title {
-  font-size: 18px;
-  font-weight: 500;
+    font-size: 18px;
+    font-weight: 500;
 }
 
 .custom-container .post-center {
-  margin: 40px 0;
-  font-weight: 500;
-  font-size: 20px;
-  
+    margin: 40px 0;
+    font-weight: 500;
+    font-size: 20px;
 }
 
 .custom-container .post-bottom {
-  margin-top: 90px;
-  display: flex;
-  justify-content: flex-end;
+    margin-top: 90px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .custom-container .post-bottom p {
-  margin: 0 10px;
-  font-weight: 300;
-  font-size: 16px;
+    margin: 0 10px;
+    font-weight: 300;
+    font-size: 16px;
 }

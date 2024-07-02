@@ -1,30 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./PostComment.css";
 import { BiCommentDetail } from "react-icons/bi";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { timeSince } from "./utils";
+import { MdDeleteForever } from "react-icons/md";
+import { MdModeEditOutline } from "react-icons/md";
 
-function PostComment() {
+function PostComment({ postId }) {
     const [comments, setComments] = useState([]);
     const { user } = useAuth();
     const [newComment, setNewComment] = useState("");
     const [newReply, setNewReply] = useState("");
     const [showReplies, setShowReplies] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [currentReply, setCurrentReply] = useState(null);
+    const [editComment, setEditComment] = useState(null);
+    const [editContent, setEditContent] = useState("");
+
+    const fetchComments = async () => {
+        setIsLoading(true);
+        try {
+            const token = localStorage.getItem("userToken");
+            const response = await fetch(
+                `http://43.202.192.54:8080/api/board/comment/comments/${postId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const data = await response.json();
+            if (data.success === "true") {
+                setComments(data.data);
+            }
+        } catch (error) {
+            console.error("Error fetching comments:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const response = await fetch(
-                    `http://43.202.192.54:8080/api/board/comment/comments/${postId}`
-                );
-                const data = await response.json();
-                setComments(data);
-            } catch (error) {
-                console.error("Error fetching comments:", error);
-            }
-        };
-
         fetchComments();
     }, [postId]);
 
@@ -36,53 +53,156 @@ function PostComment() {
         setNewReply(e.target.value);
     };
 
-    const handleCommentSubmit = (e) => {
+    const handleCommentSubmit = async (e) => {
         e.preventDefault();
         if (newComment.trim()) {
-            setComments([
-                ...comments,
-                {
-                    id: comments.length + 1,
-                    author: user / name,
-                    content: newComment,
-                    createdAt: new Date(),
-                    replies: [],
-                },
-            ]);
-            setNewComment("");
+            try {
+                const token = localStorage.getItem("userToken");
+                const response = await fetch(
+                    "http://43.202.192.54:8080/api/board/comment",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            boardId: postId,
+                            content: newComment,
+                        }),
+                    }
+                );
+
+                const data = await response.json();
+                console.log(data);
+                if (data.success === "true") {
+                    setNewComment("");
+                    fetchComments();
+                } else {
+                    console.error("댓글 작성 오류:", data.message);
+                }
+            } catch (error) {
+                console.error("댓글 작성 중 오류 발생:", error);
+            }
         }
     };
 
-    const handleReplySubmit = (commentId) => {
+    const handleReplySubmit = async (e, commentId) => {
+        if (e) e.preventDefault();
         if (newReply.trim()) {
-            const updatedComments = comments.map((comment) => {
-                if (comment.id === commentId) {
-                    return {
-                        ...comment,
-                        replies: [
-                            ...comment.replies,
-                            {
-                                id: comment.replies.length + 1,
-                                author: user.name,
-                                content: newReply,
-                                createdAt: new Date(),
-                            },
-                        ],
-                    };
+            try {
+                const token = localStorage.getItem("userToken");
+                const response = await fetch(
+                    "http://43.202.192.54:8080/api/board/comment",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            boardId: postId,
+                            parentId: commentId,
+                            content: newReply,
+                        }),
+                    }
+                );
+
+                const data = await response.json();
+                console.log(data);
+                if (data.success === "true") {
+                    setNewReply("");
+                    setCurrentReply(null);
+                    fetchComments();
+                } else {
+                    console.error("답글 작성 오류:", data.message);
                 }
-                return comment;
-            });
-            setComments(updatedComments);
-            setNewReply("");
-            setShowReplies((prev) => ({ ...prev, [commentId]: true }));
+            } catch (error) {
+                console.error("답글 작성 중 오류 발생:", error);
+            }
         }
     };
 
     const handleToggleReplies = (commentId) => {
         setShowReplies((prev) => ({
             ...prev,
-            [commentId]: !prev[commentId],
+            [commentId]: prev[commentId] ? 0 : 5,
         }));
+    };
+
+    const handleShowMoreReplies = (commentId) => {
+        setShowReplies((prev) => ({
+            ...prev,
+            [commentId]: prev[commentId] + 5,
+        }));
+    };
+
+    const handleEditComment = (comment) => {
+        setEditComment(comment);
+        setEditContent(comment.content);
+    };
+
+    const handleEditChange = (e) => {
+        setEditContent(e.target.value);
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        if (editContent.trim()) {
+            try {
+                const token = localStorage.getItem("userToken");
+                const response = await fetch(
+                    `http://43.202.192.54:8080/api/board/comment/${editComment.id}`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({
+                            content: editContent,
+                        }),
+                    }
+                );
+
+                const data = await response.json();
+                console.log(data);
+                if (data.success === "true") {
+                    setEditComment(null);
+                    setEditContent("");
+                    fetchComments();
+                } else {
+                    console.error("댓글 수정 오류:", data.message);
+                }
+            } catch (error) {
+                console.error("댓글 수정 중 오류 발생:", error);
+            }
+        }
+    };
+
+    const handleDeleteComment = async (commentId) => {
+        try {
+            const token = localStorage.getItem("userToken");
+            const response = await fetch(
+                `http://43.202.192.54:8080/api/board/comment/${commentId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const data = await response.json();
+            console.log(data);
+            if (data.success === "true") {
+                fetchComments();
+            } else {
+                console.error("댓글 삭제 오류:", data.message);
+            }
+        } catch (error) {
+            console.error("댓글 삭제 중 오류 발생:", error);
+        }
     };
 
     return (
@@ -108,89 +228,224 @@ function PostComment() {
                 <BiCommentDetail /> <span>{comments.length}</span>
             </div>
             <div className="comment-list">
-                {comments.map((comment) => (
-                    <div key={comment.data.id} className="comment-item">
-                        <div className="comment-box">
-                            <div className="comment-top">
-                                <span className="comment-text">
-                                    <span className="name-style">사용자</span>{" "}
-                                </span>
-                            </div>
-                            <div className="comment-content">
-                                <p>{comment.data.content}</p>
-                            </div>
-                            <div className="comment-actions">
-                                {comment.replies.length > 0 ? (
-                                    <span
-                                        onClick={() =>
-                                            handleToggleReplies(comment.id)
-                                        }
-                                    >
-                                        {showReplies[comment.data.id] ? (
-                                            <FaChevronUp />
-                                        ) : (
-                                            <FaChevronDown />
-                                        )}{" "}
-                                        답글 ({comment.replies.length})
-                                    </span>
-                                ) : (
-                                    <span
-                                        onClick={() =>
-                                            handleToggleReplies(comment.id)
-                                        }
-                                    >
-                                        답글 작성
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                        {showReplies[comment.id] && (
-                            <div className="reply-input">
-                                <input
-                                    type="text"
-                                    placeholder="답글을 입력하세요"
-                                    value={newReply}
-                                    onChange={handleReplyChange}
-                                    className="comment-input"
-                                />
-                                <button
-                                    className="comment-submit"
-                                    onClick={() =>
-                                        handleReplySubmit(comment.id)
-                                    }
-                                >
-                                    답글 작성
-                                </button>
-                            </div>
-                        )}
-                        {showReplies[comment.id] &&
-                            comment.replies.map((reply) => (
-                                <div
-                                    className="comment-reply-comment"
-                                    key={reply.id}
-                                >
-                                    <div className="comment-box">
-                                        <div className="comment-top">
-                                            <span className="comment-text">
-                                                <span className="name-style">
-                                                    {reply.author}
-                                                </span>{" "}
-                                                <span className="comment-time">
-                                                    {new Date(
-                                                        reply.createdAt
-                                                    ).toLocaleString()}
-                                                </span>
+                {isLoading ? (
+                    <div>불러오는 중...</div>
+                ) : (
+                    comments
+                        .filter((comment) => comment.parentId === null)
+                        .map((comment) => (
+                            <div key={comment.id} className="comment-item">
+                                <div className="comment-box">
+                                    <div className="comment-top">
+                                        <span className="comment-text">
+                                            <span className="name-style">
+                                                {comment.nickname}
                                             </span>
-                                        </div>
-                                        <div className="comment-content">
-                                            <p>{reply.content}</p>
-                                        </div>
+                                            <span className="comment-time">
+                                                {timeSince(
+                                                    new Date(comment.createdAt)
+                                                )}
+                                            </span>
+                                        </span>
+                                        {user.name === comment.nickname && (
+                                            <span className="comment-actions">
+                                                <MdModeEditOutline
+                                                    onClick={() =>
+                                                        handleEditComment(
+                                                            comment
+                                                        )
+                                                    }
+                                                />
+                                                <MdDeleteForever
+                                                    onClick={() =>
+                                                        handleDeleteComment(
+                                                            comment.id
+                                                        )
+                                                    }
+                                                />
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="comment-content">
+                                        <p>{comment.content}</p>
+                                    </div>
+                                    <div className="comment-actions">
+                                        {comments.filter(
+                                            (c) => c.parentId === comment.id
+                                        ).length > 0 ? (
+                                            <span
+                                                onClick={() => {
+                                                    if (
+                                                        showReplies[comment.id]
+                                                    ) {
+                                                        setCurrentReply(null);
+                                                    } else {
+                                                        setCurrentReply(
+                                                            comment.id
+                                                        );
+                                                    }
+                                                    handleToggleReplies(
+                                                        comment.id
+                                                    );
+                                                }}
+                                            >
+                                                {showReplies[comment.id] ? (
+                                                    <FaChevronUp />
+                                                ) : (
+                                                    <FaChevronDown />
+                                                )}{" "}
+                                                답글 (
+                                                {
+                                                    comments.filter(
+                                                        (c) =>
+                                                            c.parentId ===
+                                                            comment.id
+                                                    ).length
+                                                }
+                                                )
+                                            </span>
+                                        ) : (
+                                            <span
+                                                onClick={() => {
+                                                    setCurrentReply(comment.id);
+                                                    handleToggleReplies(
+                                                        comment.id
+                                                    );
+                                                }}
+                                            >
+                                                답글 작성
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
-                            ))}
-                    </div>
-                ))}
+                                {showReplies[comment.id] > 0 &&
+                                    comments
+                                        .filter(
+                                            (c) => c.parentId === comment.id
+                                        )
+                                        .slice(0, showReplies[comment.id])
+                                        .map((reply) => (
+                                            <div
+                                                className="comment-reply-comment"
+                                                key={reply.id}
+                                            >
+                                                <div className="comment-box">
+                                                    <div className="comment-top">
+                                                        <span className="comment-text">
+                                                            <span className="name-style">
+                                                                {reply.nickname}
+                                                            </span>
+                                                            <span className="comment-time">
+                                                                {timeSince(
+                                                                    new Date(
+                                                                        reply.createdAt
+                                                                    )
+                                                                )}
+                                                            </span>
+                                                        </span>
+                                                        {user.name ===
+                                                            reply.nickname && (
+                                                            <span className="comment-actions">
+                                                                <MdModeEditOutline
+                                                                    onClick={() =>
+                                                                        handleEditComment(
+                                                                            reply
+                                                                        )
+                                                                    }
+                                                                />
+                                                                <MdDeleteForever
+                                                                    onClick={() =>
+                                                                        handleDeleteComment(
+                                                                            reply.id
+                                                                        )
+                                                                    }
+                                                                />
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <div className="comment-content">
+                                                        <p>{reply.content}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                {showReplies[comment.id] > 0 &&
+                                    comments.filter(
+                                        (c) => c.parentId === comment.id
+                                    ).length > showReplies[comment.id] && (
+                                        <button
+                                            className="show-more-replies"
+                                            onClick={() =>
+                                                handleShowMoreReplies(
+                                                    comment.id
+                                                )
+                                            }
+                                        >
+                                            더 보기 (
+                                            {comments.filter(
+                                                (c) => c.parentId === comment.id
+                                            ).length - showReplies[comment.id]}
+                                            )
+                                        </button>
+                                    )}
+                                {currentReply === comment.id && (
+                                    <form
+                                        className="reply-input"
+                                        onSubmit={(e) =>
+                                            handleReplySubmit(e, comment.id)
+                                        }
+                                    >
+                                        <input
+                                            type="text"
+                                            placeholder="답글을 입력하세요"
+                                            value={newReply}
+                                            onChange={handleReplyChange}
+                                            className="comment-input"
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    handleReplySubmit(
+                                                        e,
+                                                        comment.id
+                                                    );
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            className="comment-submit"
+                                            onClick={() =>
+                                                handleReplySubmit(
+                                                    null,
+                                                    comment.id
+                                                )
+                                            }
+                                        >
+                                            답글 작성
+                                        </button>
+                                    </form>
+                                )}
+                            </div>
+                        ))
+                )}
             </div>
+            {editComment && (
+                <form className="edit-comment-form" onSubmit={handleEditSubmit}>
+                    <input
+                        type="text"
+                        value={editContent}
+                        onChange={handleEditChange}
+                        className="comment-input"
+                    />
+                    <button type="submit" className="comment-submit">
+                        수정 완료
+                    </button>
+                    <button
+                        onClick={() => setEditComment(null)}
+                        className="comment-cancel"
+                    >
+                        취소
+                    </button>
+                </form>
+            )}
         </div>
     );
 }

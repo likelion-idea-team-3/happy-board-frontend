@@ -10,6 +10,7 @@ function Mypage() {
     const { user } = useAuth();
     const [normalPosts, setNormalPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -44,63 +45,88 @@ function Mypage() {
                 }
             } catch (error) {
                 console.error("Error fetching posts:", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchPosts();
-    }, [user.id]);
+    }, []);
+
+    const handlePostClick = (postId) => {
+        navigate(`/post/${postId}`);
+    };
 
     return (
         <div className="mypage-container">
             <h1>
                 <span className="mypage-username">{user.name}</span>님의
             </h1>
-
-            <h3>
-                <FaGrinHearts />
-                완전 럭키비키한 게시글
-            </h3>
-            {normalPosts.length === 0 ? (
+            {loading ? (
+                <p>로딩 중...</p>
+            ) : (
                 <>
-                    <p>아직 작성된 긍정 기운이 없어요..!</p>
-                    <p
-                        style={{ cursor: "pointer" }}
-                        onClick={() => {
-                            navigate("/post");
+                    <h3>
+                        <FaGrinHearts />
+                        완전 럭키비키한 게시글
+                    </h3>
+                    {normalPosts.length === 0 ? (
+                        <>
+                            <p>아직 작성된 긍정 기운이 없어요..!</p>
+                            <p
+                                className="mypage-goto-post"
+                                onClick={() => {
+                                    navigate("/post");
+                                }}
+                            >
+                                👉지금 기운 쌓으러 가기!👉
+                            </p>
+                        </>
+                    ) : (
+                        <ul className="post-list">
+                            {normalPosts.map((post) => (
+                                <li
+                                    key={post.id}
+                                    className="post-item"
+                                    onClick={() => handlePostClick(post.id)}
+                                >
+                                    <h2>{post.title}</h2>
+                                    <p>{post.content}</p>
+                                    <span>{timeSince(post.createdAt)}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+
+                    <h3
+                        style={{
+                            color: "red",
+                            borderTop: "3px solid black",
+                            paddingTop: "20px",
                         }}
                     >
-                        지금 기운 쌓으러 가기!
-                    </p>
+                        {" "}
+                        <FaBan style={{ color: "red" }} />
+                        필터링 된 게시글
+                    </h3>
+
+                    {filteredPosts.length === 0 ? (
+                        <p>다행히도 아직은 없네요..!</p>
+                    ) : (
+                        <ul className="post-list">
+                            {filteredPosts.map((post) => (
+                                <li
+                                    key={post.id}
+                                    className="post-item"
+                                    onClick={() => handlePostClick(post.id)}
+                                >
+                                    <h2>{post.title}</h2>
+                                    <p>{post.content}</p>
+                                    <span>{timeSince(post.createdAt)}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </>
-            ) : (
-                <ul className="post-list">
-                    {normalPosts.map((post) => (
-                        <li key={post.id} className="post-item">
-                            <h2>{post.title}</h2>
-                            <p>{post.content}</p>
-                            <span>{timeSince(post.createdAt)}</span>
-                        </li>
-                    ))}
-                </ul>
-            )}
-
-            <h3 style={{ color: "red" }}>
-                {" "}
-                <FaBan style={{ color: "red" }} />
-                필터링 된 게시글
-            </h3>
-
-            {filteredPosts.length === 0 ? (
-                <p>다행히도 아직은 없네요..!</p>
-            ) : (
-                <ul className="post-list">
-                    {filteredPosts.map((post) => (
-                        <li key={post.id} className="post-item">
-                            <h2>{post.title}</h2>
-                            <p>{post.content}</p>
-                            <span>{timeSince(post.createdAt)}</span>
-                        </li>
-                    ))}
-                </ul>
             )}
         </div>
     );

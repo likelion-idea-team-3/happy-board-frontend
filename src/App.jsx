@@ -15,9 +15,20 @@ import MainPostBoard from "./Page/PostBoard/MainPostBoard";
 import EditArticle from "./Page/PostBoard/EditArticle";
 import Mypage from "./Page/Mypage/Mypage";
 
+function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+}
+
 function App() {
     return (
         <>
+            <ScrollToTop />
             <Header />
             <Routes>
                 <Route exact path="/" element={<MainPage />} />
