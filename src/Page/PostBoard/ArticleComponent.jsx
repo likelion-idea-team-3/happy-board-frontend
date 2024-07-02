@@ -14,13 +14,7 @@ function ArticleComponent(props) {
                     <div className="textbox">
                         <div className="textcategori">{props.category}</div>
                         <div className="textheader">{props.title}</div>
-                        <div className="liked">
-                            <img
-                                src="https://img.icons8.com/ios/50/hearts--v1.png"
-                                alt="hearts--v1"
-                            />
-                            <div className="likedCount">{props.liked}</div>
-                        </div>
+                        <div className="writer">{props.writer}</div>
                         <div className="postedDay">{props.postedDay}</div>
                     </div>
                 </Link>

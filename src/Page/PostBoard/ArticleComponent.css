@@ -36,17 +36,11 @@ img {
     text-align: right;
 }
 
-.liked {
+.writer {
     padding: 0.5rem;
     display: flex;
     justify-content: start;
     align-items: center;
-}
-
-.liked > img {
-    width: 30px;
-    height: 30px;
-    margin: 5px;
 }
 
 .addArticlesContainer {
