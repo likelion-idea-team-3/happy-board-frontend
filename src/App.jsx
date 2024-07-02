@@ -12,6 +12,7 @@ import LoginPage from "./Page/TestLoginPage/LoginPage";
 import SignupPage from "./Page/TestLoginPage/SignupPage";
 import MainPostBoard from "./Page/PostBoard/MainPostBoard";
 import EditArticle from "./Page/PostBoard/EditArticle";
+import Mypage from "./Page/Mypage/Mypage";
 
 function App() {
     return (
@@ -24,6 +25,8 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup1" element={<SignupPage />} />
                 <Route path="/post" element={<MainPostBoard />} />
+                <Route path="/post/:postId" element={<DetailPost />} />
+                <Route path="/mypost" element={<Mypage />} />
                 <Route path="/edit" element={<EditArticle />} />
                 <Route path="*" element={<NonePage />} />
             </Routes>
