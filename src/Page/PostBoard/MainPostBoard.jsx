@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../SideComponent/Header/AuthContext";
 import ArticleComponent from "./ArticleComponent";
 import "./MainPostBoard.css";
 
@@ -9,7 +10,7 @@ function MainPostBoard() {
     const [selected, setSelected] = useState(0);
     const [articles, setArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const loginedId = 1;
+    const { user } = useAuth(); // useAuth 훅을 사용하여 로그인된 사용자 정보 가져오기
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -59,6 +60,35 @@ function MainPostBoard() {
         navigate(`/edit/${articleId}`);
     };
 
+    const handleDelete = async (articleId) => {
+        const token = localStorage.getItem("userToken");
+
+        if (!token) {
+            console.error("No auth token found. Please log in first.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://43.202.192.54:8080/api/boards/happy/${articleId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.log(errorData);
+                throw new Error(errorData.message || "Network response was not ok");
+            }
+
+            console.log("Article deleted successfully");
+            setArticles(articles.filter((article) => article.id !== articleId));
+        } catch (error) {
+            console.error("Error deleting article:", error);
+        }
+    };
+
     function timeAgo(dateText) {
         const date = new Date(dateText);
         const now = new Date();
@@ -106,8 +136,9 @@ function MainPostBoard() {
                                 title={article.title}
                                 postedDay={timeAgo(article.modifiedAt)}
                                 writer={article.member.nickname}
-                                showEditButton={loginedId === article.id}
-                                onEdit={() => handleEdit(article.member.id)}
+                                showEditButton={user.name === article.member.nickname} // 로그인된 사용자와 게시글 작성자가 같은지 확인
+                                onEdit={() => handleEdit(article.id)}
+                                onDelete={() => handleDelete(article.id)}
                             />
                         </div>
                     ))}
