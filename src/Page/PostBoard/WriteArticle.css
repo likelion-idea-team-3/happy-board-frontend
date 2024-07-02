@@ -1,4 +1,3 @@
-/* 기본 스타일 설정 */
 .selectCategori {
     margin-bottom: 20px;
 }
@@ -6,12 +5,12 @@
 .typeArea {
     padding: 20px;
     margin-bottom: 20px;
+    margin-top: 70px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 제목 작성란 스타일 */
 .writeHeader,
 .writePara {
     margin: 20px 0;
@@ -29,7 +28,6 @@
     background-color: #fff;
 }
 
-/* 입력 영역 스타일 */
 .writePara .editorToolbar {
     display: flex;
     align-items: center;
@@ -55,7 +53,7 @@
     transform: scale(1.05);
 }
 
-.writePara .editorToolbar input[type='file'] {
+.writePara .editorToolbar input[type="file"] {
     display: none;
 }
 
@@ -68,8 +66,7 @@
     background-color: #fff;
 }
 
-/* 제출 버튼 스타일 */
-input[type='submit'] {
+input[type="submit"] {
     background-color: #4caf50;
     color: white;
     padding: 12px 20px;
@@ -81,12 +78,11 @@ input[type='submit'] {
     transition: background-color 0.3s, transform 0.3s;
 }
 
-input[type='submit']:hover {
+input[type="submit"]:hover {
     background-color: #45a049;
     transform: scale(1.05);
 }
 
-/* 아이콘 이미지 스타일 */
 .boldimg,
 .italicimg,
 .underlineimg,

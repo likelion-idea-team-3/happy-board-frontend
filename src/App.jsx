@@ -14,6 +14,7 @@ import SignupPage from "./Page/TestLoginPage/SignupPage";
 import MainPostBoard from "./Page/PostBoard/MainPostBoard";
 import EditArticle from "./Page/PostBoard/EditArticle";
 import Mypage from "./Page/Mypage/Mypage";
+import WriteArticle from "./Page/PostBoard/WriteArticle";
 
 function ScrollToTop() {
     const { pathname } = useLocation();
@@ -39,7 +40,8 @@ function App() {
                 <Route path="/post" element={<MainPostBoard />} />
                 <Route path="/post/:postId" element={<DetailPost />} />
                 <Route path="/mypost" element={<Mypage />} />
-                <Route path="/edit" element={<EditArticle />} />
+                <Route path="/edit/:id" element={<EditArticle />} />
+                <Route path="/write" element={<WriteArticle />} />
                 <Route path="*" element={<NonePage />} />
             </Routes>
             <Footer />

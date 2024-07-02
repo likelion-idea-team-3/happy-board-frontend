@@ -1,85 +1,75 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './WriteArticle.css';
-import DummyArticles from './DummyArticles';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./WriteArticle.css";
 
 function WriteArticle() {
-    const categories = [...new Set(DummyArticles.map((article) => article.category))];
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('카테고리 없음');
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
     const navigate = useNavigate();
 
-    const date = new Date();
-    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
-        date.getDate()
-    ).padStart(2, '0')}`;
+    async function postArticle(url, articleData) {
+        const token = localStorage.getItem("userToken");
+
+        if (!token) {
+            console.error("No token found. Please log in first.");
+            return;
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(articleData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.log(errorData);
+                throw new Error(errorData.message || "Network response was not ok");
+            }
+
+            const data = await response.json();
+            console.log("Article posted successfully:", data);
+        } catch (error) {
+            console.error("Error posting article:", error);
+        }
+    }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const articleData = {
+            title,
+            content,
+        };
+
+        try {
+            await postArticle("http://43.202.192.54:8080/api/boards/happy", articleData);
+            navigate("/"); // 게시물 작성 후 메인 페이지로 이동
+        } catch (error) {
+            console.error("Failed to post article:", error);
+        }
+    };
 
     const handleCommand = (command, value = null) => {
         document.execCommand(command, false, value);
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setSelectedFile(file);
-        console.log('Selected file:', file);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault(); // 기본 제출 행동 방지
-
-        // 폼 데이터 수집
-        const newArticle = {
-            id: DummyArticles.length + 1,
-            imgSrc: selectedFile ? URL.createObjectURL(selectedFile) : null,
-            category: selectedCategory,
-            title: title,
-            postedDay: formattedDate,
-            viewed: 0,
-            liked: 0,
-            content: content,
-        };
-
-        // DummyArticles에 새로운 항목 추가
-        DummyArticles.push(newArticle);
-
-        // 콘솔에서 확인
-        console.log('Submitted Article:', newArticle);
-
-        // 입력된 데이터 초기화
-        setTitle('');
-        setSelectedCategory('');
-        setContent('');
-        setSelectedFile(null);
-
-        // 홈 화면으로 리디렉션
-        navigate('/');
-    };
-
     const handleContentChange = (e) => {
-        setContent(e.target.textContent); // div 내용을 가져와서 상태 업데이트
+        setContent(e.target.textContent);
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     };
 
-    const handleCategoryChange = (e) => {
-        setSelectedCategory(e.target.value);
-    };
-
     return (
         <>
             <div className="selectCategori">
                 <form action="#" onSubmit={handleSubmit}>
-                    <select name="categories" id="category" value={selectedCategory} onChange={handleCategoryChange}>
-                        {categories.map((category, index) => (
-                            <option key={index} value={category}>
-                                {category}
-                            </option>
-                        ))}
-                    </select>
                     <div className="typeArea">
                         <div className="writeHeader">
                             <input
@@ -93,11 +83,11 @@ function WriteArticle() {
                         </div>
                         <div className="writePara">
                             <div className="editorToolbar">
-                                <button type="button" onClick={() => handleCommand('bold')}>
+                                <button type="button" onClick={() => handleCommand("bold")}>
                                     <img className="boldimg" src="https://img.icons8.com/ios-filled/50/b.png" alt="B" />
                                     <span>Bold</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('italic')}>
+                                <button type="button" onClick={() => handleCommand("italic")}>
                                     <img
                                         className="italicimg"
                                         src="https://img.icons8.com/ios-filled/50/italic.png"
@@ -105,7 +95,7 @@ function WriteArticle() {
                                     />
                                     <span>Italic</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('underline')}>
+                                <button type="button" onClick={() => handleCommand("underline")}>
                                     <img
                                         className="underlineimg"
                                         src="https://img.icons8.com/ios-filled/50/underline.png"
@@ -113,7 +103,7 @@ function WriteArticle() {
                                     />
                                     <span>Underline</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('foreColor', 'red')}>
+                                <button type="button" onClick={() => handleCommand("foreColor", "red")}>
                                     <img
                                         className="colorimg"
                                         src="https://img.icons8.com/ios-filled/50/color-wheel.png"
@@ -121,7 +111,7 @@ function WriteArticle() {
                                     />
                                     <span>Color</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('justifyLeft')}>
+                                <button type="button" onClick={() => handleCommand("justifyLeft")}>
                                     <img
                                         className="alignleftimg"
                                         src="https://img.icons8.com/ios-filled/50/align-left.png"
@@ -129,7 +119,7 @@ function WriteArticle() {
                                     />
                                     <span>Left</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('justifyCenter')}>
+                                <button type="button" onClick={() => handleCommand("justifyCenter")}>
                                     <img
                                         className="aligncenterimg"
                                         src="https://img.icons8.com/ios-filled/50/align-center.png"
@@ -137,7 +127,7 @@ function WriteArticle() {
                                     />
                                     <span>Center</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('justifyRight')}>
+                                <button type="button" onClick={() => handleCommand("justifyRight")}>
                                     <img
                                         className="alignrightimg"
                                         src="https://img.icons8.com/ios-filled/50/align-right.png"
@@ -153,7 +143,6 @@ function WriteArticle() {
                                     />
                                     <span>Photo</span>
                                 </label>
-                                <input type="file" id="fileInput" name="file" onChange={handleFileChange} />
                             </div>
                             <div
                                 id="content"
