@@ -1,6 +1,11 @@
 import "./App.css";
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes,
+    useLocation,
+} from "react-router-dom";
 import SignupForm from "./components/SignupForm/SignupForm";
 import MainPage from "./Page/MainPage/MainPage";
 import Header from "./SideComponent/Header/Header";
@@ -14,9 +19,20 @@ import MainPostBoard from "./Page/PostBoard/MainPostBoard";
 import EditArticle from "./Page/PostBoard/EditArticle";
 import Mypage from "./Page/Mypage/Mypage";
 
+function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+}
+
 function App() {
     return (
         <>
+            <ScrollToTop />
             <Header />
             <Routes>
                 <Route exact path="/" element={<MainPage />} />

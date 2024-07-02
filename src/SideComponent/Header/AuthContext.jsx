@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
-// Create context
 const AuthContext = createContext();
 
-// Provide context
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
@@ -32,7 +30,6 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
-// Custom hook to use the AuthContext
 export const useAuth = () => {
     return useContext(AuthContext);
 };

@@ -23,6 +23,7 @@ function Header() {
     const confirmLogout = () => {
         setShowLogoutConfirm(false);
         logout();
+        navigate("/");
     };
 
     const cancelLogout = () => {
