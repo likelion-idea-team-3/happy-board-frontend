@@ -67,44 +67,6 @@ function MainPostBoard() {
         }
     }
 
-    function saveTokenToLocalStorage(token) {
-        // 로컬 스토리지에 token 저장
-        localStorage.setItem("authToken", token);
-        console.log("Token saved to local storage.");
-    }
-
-    // 예시: 서버로부터 token을 받아와서 저장하는 함수
-    async function fetchAndSaveToken(url, credentials) {
-        try {
-            // 자격 증명을 쿼리 파라미터로 추가
-            const queryParams = new URLSearchParams(credentials).toString();
-            const response = await fetch(`${url}?${queryParams}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Network response was not ok");
-            }
-
-            const data = await response.json();
-            const token = data.token; // 서버가 반환하는 token의 key를 맞춰주세요
-            saveTokenToLocalStorage(token);
-        } catch (error) {
-            console.error("Error fetching token:", error);
-        }
-    }
-
-    // 예시 사용법
-    const url = "https://example.com/api/get-token";
-    const credentials = {
-        username: "user",
-        password: "password",
-    };
-
     return (
         <>
             <div className="sortContainer">

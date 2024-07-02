@@ -1,85 +1,73 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./WriteArticle.css";
-import DummyArticles from "./DummyArticles";
 
 function WriteArticle() {
-    const categories = [...new Set(DummyArticles.map((article) => article.category))];
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("카테고리 없음");
-    const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
-    const date = new Date();
-    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-        date.getDate()
-    ).padStart(2, "0")}`;
+    async function postArticle(url, articleData) {
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+            throw new Error("No auth token found. Please log in first.");
+        }
+
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`, // 인증 헤더에 token 포함
+                },
+                body: JSON.stringify(articleData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Network response was not ok");
+            }
+
+            const data = await response.json();
+            console.log("Article posted successfully:", data);
+        } catch (error) {
+            console.error("Error posting article:", error);
+        }
+    }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const articleData = {
+            title,
+            content,
+        };
+
+        try {
+            await postArticle("https://example.com/api/articles", articleData);
+            navigate("/"); // 게시물 작성 후 메인 페이지로 이동
+        } catch (error) {
+            console.error("Failed to post article:", error);
+        }
+    };
 
     const handleCommand = (command, value = null) => {
         document.execCommand(command, false, value);
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        setSelectedFile(file);
-        console.log("Selected file:", file);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault(); // 기본 제출 행동 방지
-
-        // 폼 데이터 수집
-        const newArticle = {
-            id: DummyArticles.length + 1,
-            imgSrc: selectedFile ? URL.createObjectURL(selectedFile) : null,
-            category: selectedCategory,
-            title: title,
-            postedDay: formattedDate,
-            viewed: 0,
-            liked: 0,
-            content: content,
-        };
-
-        // DummyArticles에 새로운 항목 추가
-        DummyArticles.push(newArticle);
-
-        // 콘솔에서 확인
-        console.log("Submitted Article:", newArticle);
-
-        // 입력된 데이터 초기화
-        setTitle("");
-        setSelectedCategory("");
-        setContent("");
-        setSelectedFile(null);
-
-        // 홈 화면으로 리디렉션
-        navigate("/");
-    };
-
     const handleContentChange = (e) => {
-        setContent(e.target.textContent); // div 내용을 가져와서 상태 업데이트
+        setContent(e.target.textContent);
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     };
 
-    const handleCategoryChange = (e) => {
-        setSelectedCategory(e.target.value);
-    };
-
     return (
         <>
             <div className="selectCategori">
                 <form action="#" onSubmit={handleSubmit}>
-                    <select name="categories" id="category" value={selectedCategory} onChange={handleCategoryChange}>
-                        {categories.map((category, index) => (
-                            <option key={index} value={category}>
-                                {category}
-                            </option>
-                        ))}
-                    </select>
                     <div className="typeArea">
                         <div className="writeHeader">
                             <input
@@ -153,7 +141,6 @@ function WriteArticle() {
                                     />
                                     <span>Photo</span>
                                 </label>
-                                <input type="file" id="fileInput" name="file" onChange={handleFileChange} />
                             </div>
                             <div
                                 id="content"
