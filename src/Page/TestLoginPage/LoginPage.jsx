@@ -3,30 +3,43 @@ import { useAuth } from "../../SideComponent/Header/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+    const { login } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        console.log(`${email}`, `${password}`);
+
         try {
-            const response = await fetch("/api/members/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await response.json();
-            if (data.success) {
-                login({ email, name: data.data.name });
-                localStorage.setItem("userToken", data.data.token);
+            const body = JSON.stringify({ email, password });
+            console.log("Request Body:", body);
+
+            const response = await fetch(
+                "http://43.202.192.54:8080/api/members/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: body,
+                }
+            );
+
+            const result = await response.json();
+            console.log(result);
+
+            if (result.success === "true") {
+                console.log("성공");
+                localStorage.setItem("userToken", result.data.token);
+                login({ name: result.data.nickname });
                 navigate("/");
             } else {
-                console.error("로그인 오류:", data.message);
+                console.error("로그인 오류 : 400", result.success);
             }
         } catch (error) {
+            console.log("실패");
             console.error("로그인 오류:", error);
         }
     };
@@ -41,7 +54,6 @@ function LoginPage() {
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        required
                     />
                 </label>
                 <br />
@@ -51,7 +63,6 @@ function LoginPage() {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        required
                     />
                 </label>
                 <br />
