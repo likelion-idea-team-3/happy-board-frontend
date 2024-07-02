@@ -8,10 +8,11 @@ function WriteArticle() {
     const navigate = useNavigate();
 
     async function postArticle(url, articleData) {
-        const token = localStorage.getItem("authToken");
+        const token = localStorage.getItem("userToken");
 
         if (!token) {
-            throw new Error("No auth token found. Please log in first.");
+            console.error("No token found. Please log in first.");
+            return;
         }
 
         try {
@@ -19,13 +20,14 @@ function WriteArticle() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`, // 인증 헤더에 token 포함
+                    Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify(articleData),
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
+                console.log(errorData);
                 throw new Error(errorData.message || "Network response was not ok");
             }
 
@@ -45,7 +47,7 @@ function WriteArticle() {
         };
 
         try {
-            await postArticle("https://example.com/api/articles", articleData);
+            await postArticle("http://43.202.192.54:8080/api/boards/happy", articleData);
             navigate("/"); // 게시물 작성 후 메인 페이지로 이동
         } catch (error) {
             console.error("Failed to post article:", error);

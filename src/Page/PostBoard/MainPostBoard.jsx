@@ -1,19 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../SideComponent/Header/AuthContext";
 import ArticleComponent from "./ArticleComponent";
-import DummyArticles from "./DummyArticles";
 import "./MainPostBoard.css";
 
 const ARTICLES_PER_PAGE = 8;
 
 function MainPostBoard() {
-    const { user } = useAuth();
-    const [selected, setSelected] = React.useState(0);
-    const [articles, setArticles] = React.useState(DummyArticles);
-    const [currentPage, setCurrentPage] = React.useState(1);
+    const [selected, setSelected] = useState(0);
+    const [articles, setArticles] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const loginedId = 1;
     const navigate = useNavigate();
+
+    useEffect(() => {
+        fetchArticles();
+    }, []);
+
+    const fetchArticles = async () => {
+        try {
+            const response = await fetch("http://43.202.192.54:8080/api/boards/happy"); // 데이터를 받아올 URL을 여기에 입력하세요
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            console.log("Fetched data:", data); // 데이터 확인 로그
+            if (data.success === "true" && Array.isArray(data.data)) {
+                setArticles(data.data);
+            } else {
+                console.error("Fetched data is not in expected format:", data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch articles:", error);
+        }
+    };
 
     function startSort(index) {
         setSelected(index);
@@ -37,7 +56,6 @@ function MainPostBoard() {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleEdit = (articleId) => {
-        // Navigate to edit page or perform edit action
         navigate(`/edit/${articleId}`);
     };
 
@@ -83,13 +101,13 @@ function MainPostBoard() {
             <div className="outercontainer">
                 <div className="otherArticles">
                     {currentArticles.map((article) => (
-                        <div key={article.data.id} className="item">
+                        <div key={article.id} className="item">
                             <ArticleComponent
-                                title={article.data.title}
-                                postedDay={timeAgo(article.data.modifiedAt)}
-                                writer={article.data.member.nickname}
+                                title={article.title}
+                                postedDay={timeAgo(article.modifiedAt)}
+                                writer={article.member.nickname}
                                 showEditButton={loginedId === article.id}
-                                onEdit={() => handleEdit(article.id)}
+                                onEdit={() => handleEdit(article.member.id)}
                             />
                         </div>
                     ))}
