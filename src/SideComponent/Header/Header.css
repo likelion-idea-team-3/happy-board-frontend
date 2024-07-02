@@ -1,142 +1,167 @@
 .Header-Container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 100px;
-  background-color: black;
-  color: white;
-  user-select: none;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
-  border-radius: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-weight: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 100px;
+    background-color: black;
+    color: white;
+    user-select: none;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-radius: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 100;
 }
 
 .Header-Container .Logo {
-  font-family: 'yg-jalnan', sans-serif;
-  font-size: 35px;
-  flex: 1; 
-  text-align: left;
+    font-family: "yg-jalnan", sans-serif;
+    font-size: 35px;
+    flex: 1;
+    text-align: left;
 }
 
 .Header-Container a {
-  text-decoration: none;
-  color: inherit;
-  outline: none;
+    text-decoration: none;
+    color: inherit;
+    outline: none;
 }
 
 .Header-Container a:focus,
 .Header-Container a:active {
-  outline: none;
-  text-decoration: none;
+    outline: none;
+    text-decoration: none;
 }
 
 .Nav-Menu {
-  flex: 2;
-  display: flex;
-  justify-content: center;
-  
+    flex: 2;
+    display: flex;
+    justify-content: center;
 }
 
 .Nav-Menu ul {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-  
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
 }
 
 .Nav-Menu ul li {
-  margin: 0 60px;
-  position: relative;
+    margin: 0 60px;
+    position: relative;
 }
 
 .Nav-Menu ul li a {
-  text-decoration: none;
-  color: white;
-  font-size: 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
 }
 
+.Nav-Menu-Login span:hover,
 .Nav-Menu-Login ul li a:hover,
 .Nav-Menu ul li a:hover {
-  color: #D3D3D3;
+    color: #d3d3d3;
 }
 
+.Nav-Menu-Login span:hover::after,
 .Nav-Menu ul li:hover::after {
-  transform: scaleX(1);
+    transform: scaleX(1);
 }
 
+.Nav-Menu-Login span::after,
 .Nav-Menu ul li::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -8px; 
-  height: 3px; 
-  background-color: white;
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s ease-in-out;
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -8px;
+    height: 3px;
+    background-color: white;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease-in-out;
 }
 
 .Nav-Menu-Login {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .Nav-Menu-Login ul {
-  list-style: none;
+    list-style: none;
+}
+
+.Nav-Menu-Login button {
+    margin: 20px;
+    border: none;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+}
+
+.Nav-Menu-Login span {
+    position: relative;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: 10px;
 }
 
 .Menu-Icon {
-  display: none;
+    display: none;
 }
 
 @font-face {
-  font-family: 'yg-jalnan';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
+    font-family: "yg-jalnan";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff")
+        format("woff");
+    font-weight: normal;
+    font-style: normal;
 }
 
 @media (max-width: 1200px) {
-  .Nav-Menu, .Nav-Menu-Login {
-    display: none;
-  }
+    .Nav-Menu,
+    .Nav-Menu-Login {
+        display: none;
+    }
 
-  .Menu-Icon {
-    display: block;
-    font-size: 35px;
-  }
+    .Menu-Icon {
+        display: block;
+        font-size: 35px;
+    }
 
-  .Menu-Icon:hover{
-    color: #D3D3D3;
-    cursor: pointer;
-  }
+    .Menu-Icon:hover {
+        color: #d3d3d3;
+        cursor: pointer;
+    }
 
-  .Nav-Menu.open, .Nav-Menu-Login.open {
-    display: flex;
-    position: absolute;
-    top: 80px;
-    left: 0;
-    width: 100%;
-    background-color: black;
-    padding: 10px 0;
-    z-index: 999;
-    border-radius: 10px;
-  }
+    .Nav-Menu.open,
+    .Nav-Menu-Login.open {
+        display: flex;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background-color: black;
+        padding: 10px 0;
+        z-index: 999;
+        border-radius: 10px;
+    }
 
-  .Nav-Menu ul, .Nav-Menu-Login ul {
-    align-items: center;
-  }
+    .Nav-Menu ul,
+    .Nav-Menu-Login ul {
+        align-items: center;
+    }
 
-  .Nav-Menu ul li, .Nav-Menu-Login ul li {
-    margin: 0px 20px;
-    padding: 0 10px;
-  }
+    .Nav-Menu ul li,
+    .Nav-Menu-Login ul li {
+        margin: 0px 20px;
+        padding: 0 10px;
+    }
 }
