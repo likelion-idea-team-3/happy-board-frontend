@@ -1,20 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './WriteArticle.css';
-import DummyArticles from './DummyArticles';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./WriteArticle.css";
+import DummyArticles from "./DummyArticles";
 
 function WriteArticle() {
     const categories = [...new Set(DummyArticles.map((article) => article.category))];
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('카테고리 없음');
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("카테고리 없음");
     const [selectedFile, setSelectedFile] = useState(null);
     const navigate = useNavigate();
 
     const date = new Date();
-    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+    const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
         date.getDate()
-    ).padStart(2, '0')}`;
+    ).padStart(2, "0")}`;
 
     const handleCommand = (command, value = null) => {
         document.execCommand(command, false, value);
@@ -23,7 +23,7 @@ function WriteArticle() {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setSelectedFile(file);
-        console.log('Selected file:', file);
+        console.log("Selected file:", file);
     };
 
     const handleSubmit = (e) => {
@@ -45,16 +45,16 @@ function WriteArticle() {
         DummyArticles.push(newArticle);
 
         // 콘솔에서 확인
-        console.log('Submitted Article:', newArticle);
+        console.log("Submitted Article:", newArticle);
 
         // 입력된 데이터 초기화
-        setTitle('');
-        setSelectedCategory('');
-        setContent('');
+        setTitle("");
+        setSelectedCategory("");
+        setContent("");
         setSelectedFile(null);
 
         // 홈 화면으로 리디렉션
-        navigate('/');
+        navigate("/");
     };
 
     const handleContentChange = (e) => {
@@ -93,11 +93,11 @@ function WriteArticle() {
                         </div>
                         <div className="writePara">
                             <div className="editorToolbar">
-                                <button type="button" onClick={() => handleCommand('bold')}>
+                                <button type="button" onClick={() => handleCommand("bold")}>
                                     <img className="boldimg" src="https://img.icons8.com/ios-filled/50/b.png" alt="B" />
                                     <span>Bold</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('italic')}>
+                                <button type="button" onClick={() => handleCommand("italic")}>
                                     <img
                                         className="italicimg"
                                         src="https://img.icons8.com/ios-filled/50/italic.png"
@@ -105,7 +105,7 @@ function WriteArticle() {
                                     />
                                     <span>Italic</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('underline')}>
+                                <button type="button" onClick={() => handleCommand("underline")}>
                                     <img
                                         className="underlineimg"
                                         src="https://img.icons8.com/ios-filled/50/underline.png"
@@ -113,7 +113,7 @@ function WriteArticle() {
                                     />
                                     <span>Underline</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('foreColor', 'red')}>
+                                <button type="button" onClick={() => handleCommand("foreColor", "red")}>
                                     <img
                                         className="colorimg"
                                         src="https://img.icons8.com/ios-filled/50/color-wheel.png"
@@ -121,7 +121,7 @@ function WriteArticle() {
                                     />
                                     <span>Color</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('justifyLeft')}>
+                                <button type="button" onClick={() => handleCommand("justifyLeft")}>
                                     <img
                                         className="alignleftimg"
                                         src="https://img.icons8.com/ios-filled/50/align-left.png"
@@ -129,7 +129,7 @@ function WriteArticle() {
                                     />
                                     <span>Left</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('justifyCenter')}>
+                                <button type="button" onClick={() => handleCommand("justifyCenter")}>
                                     <img
                                         className="aligncenterimg"
                                         src="https://img.icons8.com/ios-filled/50/align-center.png"
@@ -137,7 +137,7 @@ function WriteArticle() {
                                     />
                                     <span>Center</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand('justifyRight')}>
+                                <button type="button" onClick={() => handleCommand("justifyRight")}>
                                     <img
                                         className="alignrightimg"
                                         src="https://img.icons8.com/ios-filled/50/align-right.png"
