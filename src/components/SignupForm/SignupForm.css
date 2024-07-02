@@ -72,8 +72,6 @@
   color: #000; /* 선택된 탭 글씨 색 */
 }
 
-}
-
 .error {
   color: red;
   text-align: center;

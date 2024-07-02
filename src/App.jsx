@@ -1,8 +1,8 @@
 import "./App.css";
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 
-import SignupForm from './components/signupForm/SignupForm';
+import SignupForm from './components/SignupForm/SignupForm';
 import MainPage from "./Page/MainPage/MainPage";
 import LoginForm from './components/loginForm/LoginForm';
 import Header from "./SideComponent/Header/Header";
@@ -14,6 +14,7 @@ import SignupPage from "./Page/TestLoginPage/SignupPage";
 import MainPostBoard from "./Page/PostBoard/MainPostBoard";
 import EditArticle from "./Page/PostBoard/EditArticle";
 import Mypage from "./Page/Mypage/Mypage";
+import LoginPage from './Page/TestLoginPage/LoginPage';
 
 function ScrollToTop() {
     const { pathname } = useLocation();
@@ -35,6 +36,7 @@ function App() {
                 <Route path="/signup" element={<SignupForm />} />
                 <Route path="/more" element={<MoreNews />} />
                 <Route path="/login" element={<LoginForm />} />
+                <Route path="/login1" element={<LoginPage/>} />
                 <Route path="/signup1" element={<SignupPage />} />
                 <Route path="/post" element={<MainPostBoard />} />
                 <Route path="/post/:postId" element={<DetailPost />} />

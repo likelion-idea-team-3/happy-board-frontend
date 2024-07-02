@@ -9,14 +9,14 @@ const ConfirmModal = ({
     cancelText = "취소",
 }) => {
     return (
-        <div className="modal-content">
-            <div className="modal-header">
-                <button className="close-button" onClick={onCancel}>
+        <div className="modal1-content">
+            <div className="modal1-header">
+                <button className="new-close-button" onClick={onCancel}>
                     ×
                 </button>
             </div>
             <p>{message}</p>
-            <div className="modal-buttons">
+            <div className="modal1-buttons">
                 <button onClick={onConfirm}>{confirmText}</button>
                 <button onClick={onCancel}>{cancelText}</button>
             </div>

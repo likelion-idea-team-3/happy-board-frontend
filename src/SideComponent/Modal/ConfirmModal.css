@@ -1,4 +1,4 @@
-.modal-content {
+.modal1-content {
     background: white;
     padding: 0px 10px 20px 10px;
     border-radius: 10px;
@@ -13,21 +13,21 @@
     z-index: 1000;
 }
 
-.modal-header {
+.modal1-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
 
-.modal-logo {
+.modal1-logo {
     font-family: "yg-jalnan", sans-serif;
     font-size: 30px;
     flex: 1;
     text-align: left;
 }
 
-.close-button {
+.new-close-button {
     position: absolute;
     top: 3%;
     right: 3%;
@@ -37,18 +37,18 @@
     cursor: pointer;
 }
 
-.modal-content p {
+.modal1-content p {
     font-size: 18px;
     margin: 20px;
 }
 
-.modal-buttons {
+.modal1-buttons {
     margin-top: 50px;
     display: flex;
     justify-content: space-around;
 }
 
-.modal-buttons button {
+.modal1-buttons button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -58,6 +58,6 @@
     cursor: pointer;
 }
 
-.modal-buttons button:hover {
+.modal1-buttons button:hover {
     background-color: grey;
 }
