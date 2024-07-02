@@ -7,6 +7,8 @@ Modal.setAppElement('#root');
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({
+    name: '',
+    nickname: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -16,9 +18,9 @@ const SignupForm = () => {
     receivePromotions: false,
   });
   const [error, setError] = useState('');
-  const [isPromoModalOpen, setIsPromoModalOpen] = useState(false); // Promotion modal state
-  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false); // Privacy modal state
-  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false); // Terms modal state
+  const [isPromoModalOpen, setIsPromoModalOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -33,8 +35,8 @@ const SignupForm = () => {
     e.preventDefault();
     setError('');
 
-    if (!formData.email || !formData.password || !formData.confirmPassword) {
-      setError('로그인, 비밀번호를 입력해주세요.');
+    if (!formData.name || !formData.nickname || !formData.email || !formData.password || !formData.confirmPassword) {
+      setError('이름, 닉네임, 이메일, 비밀번호를 입력해주세요.');
       return;
     }
 
@@ -93,6 +95,20 @@ const SignupForm = () => {
         </div>
         <h3>이메일로 가입하기</h3>
         {error && <div className="error">{error}</div>}
+        <input
+          type="text"
+          name="name"
+          placeholder="이름을 입력해주세요."
+          value={formData.name}
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          name="nickname"
+          placeholder="닉네임을 입력해주세요."
+          value={formData.nickname}
+          onChange={handleChange}
+        />
         <input
           type="email"
           name="email"
