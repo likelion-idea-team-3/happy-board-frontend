@@ -64,7 +64,7 @@ function Header() {
                             </li>
                         ) : (
                             <li>
-                                <Link to="/login">로그인</Link>
+                                <Link to="/signup">로그인</Link>
                             </li>
                         )}
                     </ul>

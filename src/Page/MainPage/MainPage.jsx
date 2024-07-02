@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import "./MainPage.css";
+
+import Header from "../../SideComponent/Header/Header.jsx";
+
 import MainTop from "./MainTop";
 import MainBoard from "./MainBoard";
 import MainSection from "./MainSection";

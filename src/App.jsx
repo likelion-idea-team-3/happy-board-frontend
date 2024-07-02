@@ -1,21 +1,24 @@
 import "./App.css";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SignupForm from "./components/SignupForm/SignupForm";
+
+import SignupForm from './components/signupForm/SignupForm';
 import MainPage from "./Page/MainPage/MainPage";
+import LoginForm from './components/loginForm/LoginForm'
 import Header from "./SideComponent/Header/Header";
 import Footer from "./SideComponent/Footer/Footer";
 import NonePage from "./Page/NonePage/NonePage";
 import DetailPost from "./Page/DetailPostPage/DetailPost";
 import MoreNews from "./Page/MorePage/MoreNews";
-import LoginPage from "./Page/TestLoginPage/LoginPage";
 import SignupPage from "./Page/TestLoginPage/SignupPage";
 import MainPostBoard from "./Page/PostBoard/MainPostBoard";
 import EditArticle from "./Page/PostBoard/EditArticle";
 import Mypage from "./Page/Mypage/Mypage";
 
+
 function App() {
     return (
+
         <>
             <Header />
             <Routes>
@@ -32,6 +35,7 @@ function App() {
             </Routes>
             <Footer />
         </>
+
     );
 }
 
