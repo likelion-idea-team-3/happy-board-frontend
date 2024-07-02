@@ -1,7 +1,7 @@
 import "./App.css";
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SignupForm from './components/SignupForm/SignupForm';
+import SignupForm from './components/signupForm/SignupForm';
 import MainPage from "./Page/MainPage/MainPage";
 
 const App = () => {
