@@ -7,36 +7,35 @@
     align-items: center;
     height: 100vh;
     background-color: #f7f7f7; /* 배경색 조정 */
-}
-
-.signup-form {
+  }
+  
+  .signup-form {
     width: 360px; /* 폼 너비 조정 */
     padding: 30px; /* 패딩 추가 */
     border: 1px solid #e0e0e0; /* 테두리 색 조정 */
     border-radius: 10px; /* 테두리 둥글게 */
     background-color: #fff; /* 폼 배경색 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-}
-
-/* h3과 h2 제목 스타일 통합 */
-.signup-form h2,
-.signup-form h3 {
+  }
+  
+  /* h3과 h2 제목 스타일 통합 */
+  .signup-form h2, .signup-form h3 {
     text-align: center;
     margin-bottom: 20px;
     color: #333; /* 제목 색상 */
-}
-
-/* Input 필드 스타일 */
-.signup-form input {
+  }
+  
+  /* Input 필드 스타일 */
+  .signup-form input {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-}
-
-/* Button 스타일 */
-.signup-form button {
+  }
+  
+  /* Button 스타일 */
+  .signup-form button {
     width: 100%;
     padding: 10px;
     background-color: #28a745;
@@ -44,20 +43,20 @@
     border-radius: 4px;
     color: white;
     font-size: 16px;
-}
-
-.signup-form button:hover {
+  }
+  
+  .signup-form button:hover {
     background-color: #218838;
-}
-
-/* Tabs 스타일 */
-.tabs {
+  }
+  
+  /* Tabs 스타일 */
+  .tabs {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
-}
-
-.tabs button {
+  }
+  
+  .tabs button {
     flex: 1;
     padding: 10px;
     border: none;
@@ -65,25 +64,27 @@
     font-size: 16px;
     cursor: pointer;
     color: #999; /* 글씨 색 조정 */
-}
-
-.tabs button.active {
+  }
+  
+  .tabs button.active {
     font-weight: bold;
     border-bottom: 2px solid #000; /* 선택된 탭 스타일 */
     color: #000; /* 선택된 탭 글씨 색 */
-}
-
-.error {
+  }
+  
+  }
+  
+  .error {
     color: red;
     text-align: center;
     margin-bottom: 10px;
     margin-top: -10px;
-
+  
     font-size: 14px;
-}
-
-input[type="email"],
-input[type="password"] {
+  }
+  
+  input[type="email"],
+  input[type="password"] {
     width: 100%;
     padding: 12px; /* 패딩 조정 */
     margin-bottom: 15px; /* 마진 조정 */
@@ -91,9 +92,9 @@ input[type="password"] {
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 14px; /* 글꼴 크기 조정 */
-}
-
-.signup-btn {
+  }
+  
+  .signup-btn {
     width: 100%;
     padding: 12px; /* 패딩 조정 */
     border: none;
@@ -103,39 +104,39 @@ input[type="password"] {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.signup-btn:hover {
+  }
+  
+  .signup-btn:hover {
     background-color: #333; /* 호버 시 배경색 */
-}
-
-.checkbox-group {
+  }
+  
+  .checkbox-group {
     margin-top: 20px;
-}
-
-.checkbox-item {
+  }
+  
+  .checkbox-item {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-}
-
-.checkbox-item input {
+  }
+  
+  .checkbox-item input {
     margin-right: 10px;
-}
-
-.checkbox-item span {
+  }
+  
+  .checkbox-item span {
     font-size: 14px;
-}
-
-.checkbox-item .optional {
+  }
+  
+  .checkbox-item .optional {
     color: #999;
-}
-
-.red-underline {
+  }
+  
+  .red-underline {
     color: red;
     text-decoration: underline;
-}
-.modal-overlay {
+  }
+  .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -145,48 +146,47 @@ input[type="password"] {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.modal {
+  }
+  
+  .modal {
     background: white;
     padding: 20px;
     max-width: 600px;
     width: 90%;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.modal-content h2 {
+  }
+  
+  .modal-content h2 {
     margin-top: 0;
-}
-
-.modal-table {
+  }
+  
+  .modal-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 10px;
-}
-
-.modal-table th,
-.modal-table td {
+  }
+  
+  .modal-table th, .modal-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-}
-
-.close-btn {
+  }
+  
+  .close-btn {
     background: #333;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
-}
-
-.close-btn:hover {
+  }
+  
+  .close-btn:hover {
     background: #555;
-}
-
-.modal-overlay {
+  }
+  
+  .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -196,43 +196,44 @@ input[type="password"] {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.modal {
+  }
+  
+  .modal {
     background: white;
     padding: 20px;
     max-width: 600px;
     width: 90%;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.modal-content h2 {
+  }
+  
+  .modal-content h2 {
     margin-top: 0;
-}
-
-.modal-table {
+  }
+  
+  .modal-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 10px;
-}
-
-.modal-table th,
-.modal-table td {
+  }
+  
+  .modal-table th, .modal-table td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
-}
-
-.close-btn {
+  }
+  
+  .close-btn {
     background: #333;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
-}
-
-.close-btn:hover {
+  }
+  
+  .close-btn:hover {
     background: #555;
-}
+  }
+  
+  
