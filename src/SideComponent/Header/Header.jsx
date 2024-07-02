@@ -18,7 +18,7 @@ function Header() {
               <Link to="/">더보기</Link>
             </li>
             <li>
-              <Link to="/">로그인</Link>
+              <Link to="/signup">로그인</Link>
             </li>
           </ul>
         </nav>
