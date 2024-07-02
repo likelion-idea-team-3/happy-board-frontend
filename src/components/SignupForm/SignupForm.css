@@ -72,14 +72,11 @@
   color: #000; /* 선택된 탭 글씨 색 */
 }
 
-}
-
 .error {
   color: red;
   text-align: center;
   margin-bottom: 10px;
   margin-top: -10px;
-
   font-size: 14px;
 }
 
@@ -118,10 +115,12 @@ input[type="password"] {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  font-size: 14px;
+  color: #000; /* 텍스트 색상 */
 }
 
-.checkbox-item input {
-  margin-right: 10px;
+.checkbox-item input[type="checkbox"] {
+  margin-right: 10px; /* 체크박스와 텍스트 사이 간격 조정 */
 }
 
 .checkbox-item span {
@@ -135,7 +134,13 @@ input[type="password"] {
 .red-underline {
   color: red;
   text-decoration: underline;
+  cursor: pointer;
 }
+
+.red-underline:hover {
+  text-decoration: none; /* 호버 시 밑줄 제거 */
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -185,55 +190,3 @@ input[type="password"] {
 .close-btn:hover {
   background: #555;
 }
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal {
-  background: white;
-  padding: 20px;
-  max-width: 600px;
-  width: 90%;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.modal-content h2 {
-  margin-top: 0;
-}
-
-.modal-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 10px;
-}
-
-.modal-table th, .modal-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-.close-btn {
-  background: #333;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  background: #555;
-}
-
-
