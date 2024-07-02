@@ -5,9 +5,10 @@ const CustomContainer = ({ date, author, title, content, likes, views }) => {
   return (
     <li className="custom-container">
       <div className="post-top">
-        <p>{date}</p>
-        <p>{author}</p>
-        <p>{title}</p>
+        <p className="post__date">{date}</p>
+        <p className="post__title">{title}</p>
+        <p className="post__author">{author}</p>
+
       </div>
       <div className="post-center">
         <p>{content}</p>

@@ -1,4 +1,6 @@
 /* SignupForm.css */
+
+/* 공통 스타일 */
 .signup-form-container {
   display: flex;
   justify-content: center;
@@ -16,6 +18,38 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
 }
 
+/* h3과 h2 제목 스타일 통합 */
+.signup-form h2, .signup-form h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333; /* 제목 색상 */
+}
+
+/* Input 필드 스타일 */
+.signup-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Button 스타일 */
+.signup-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+}
+
+.signup-form button:hover {
+  background-color: #218838;
+}
+
+/* Tabs 스타일 */
 .tabs {
   display: flex;
   justify-content: space-between;
@@ -38,16 +72,15 @@
   color: #000; /* 선택된 탭 글씨 색 */
 }
 
-h3 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333; /* 제목 색상 */
 }
 
 .error {
   color: red;
   text-align: center;
   margin-bottom: 10px;
+  margin-top: -10px;
+
+  font-size: 14px;
 }
 
 input[type="email"],
