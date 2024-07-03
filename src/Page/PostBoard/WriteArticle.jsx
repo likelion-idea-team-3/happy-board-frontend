@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MessageModal from '../../SideComponent/Modal/MessageModal';
+import MessageModal from "../../SideComponent/Modal/MessageModal";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
 import "./WriteArticle.css";
 
@@ -16,7 +16,7 @@ function WriteArticle() {
         const token = localStorage.getItem("userToken");
 
         if (!token) {
-            setModalMessage('로그인이 필요한 서비스입니다.');
+            setModalMessage("로그인이 필요한 서비스입니다.");
             setIsModalOpen(true);
             return;
         }
@@ -34,7 +34,7 @@ function WriteArticle() {
             const data = await response.json();
 
             if (data.code === "M006" || data.code === "H001") {
-                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
                 setIsModalOpen(true);
                 logout();
                 return;
@@ -46,7 +46,7 @@ function WriteArticle() {
             }
 
             console.log("Article posted successfully:", data);
-            setModalMessage('게시글 작성에 성공하였습니다!');
+            setModalMessage("게시글 작성에 성공하였습니다!");
             setIsModalOpen(true);
         } catch (error) {
             console.error("Error posting article:", error);
@@ -68,6 +68,11 @@ function WriteArticle() {
         }
     };
 
+    const handleCommand = (command, value = null) => {
+        document.execCommand(command, false, value);
+    };
+
+
     const handleContentChange = (e) => {
         setContent(e.target.value);
         console.log(content);
@@ -80,7 +85,7 @@ function WriteArticle() {
     const uploadImage = async (imageBlob) => {
         const formData = new FormData();
         formData.append("file", imageBlob);
-        
+
         try {
             const token = localStorage.getItem("userToken");
             const response = await fetch("http://43.202.192.54:8080/api/files/upload", {
@@ -90,6 +95,7 @@ function WriteArticle() {
                 },
                 body: formData,
             });
+
 
             const data = await response.text();
 
@@ -137,7 +143,7 @@ function WriteArticle() {
 
     const handleModalClose = () => {
         setIsModalOpen(false);
-        if (modalMessage === '게시글 작성에 성공하였습니다!') {
+        if (modalMessage === "게시글 작성에 성공하였습니다!") {
             navigate("/post");
         } else {
             navigate("/login");
@@ -213,14 +219,6 @@ function WriteArticle() {
                                     />
                                     <span>Right</span>
                                 </button>
-                                <label htmlFor="fileInput" className="fileInputLabel">
-                                    <img
-                                        className="photoimg"
-                                        src="https://img.icons8.com/ios-filled/50/photo.png"
-                                        alt="Photo"
-                                    />
-                                    <span>Photo</span>
-                                </label>
                             </div>
                             <textarea
                                 id="content"
@@ -234,12 +232,7 @@ function WriteArticle() {
                     <input type="submit" value="Submit" />
                 </form>
             </div>
-            <MessageModal
-                message={modalMessage}
-                onClose={handleModalClose}
-                buttonText="확인"
-                isOpen={isModalOpen}
-            />
+            <MessageModal message={modalMessage} onClose={handleModalClose} buttonText="확인" isOpen={isModalOpen} />
         </>
     );
 }
