@@ -1,51 +1,36 @@
+.modal1-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .modal1-content {
-    background: white;
-    padding: 0px 10px 20px 10px;
+    background: #fff;
+    padding: 20px;
     border-radius: 10px;
     text-align: center;
-    width: 50%; /* 원하는 너비로 조정 */
-    max-width: 500px; /* 최대 너비 설정 */
+    width: 90%;
+    max-width: 400px; 
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    transform: translate(-50%, -50%);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    z-index: 1000;
-}
-
-.modal1-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.modal1-logo {
-    font-family: "yg-jalnan", sans-serif;
-    font-size: 30px;
-    flex: 1;
-    text-align: left;
-}
-
-.new-close-button {
-    position: absolute;
-    top: 3%;
-    right: 3%;
-    background: none;
-    border: none;
-    font-size: 40px;
-    cursor: pointer;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .modal1-content p {
     font-size: 18px;
-    margin: 20px;
+    margin: 20px 0;
+    color: #333;
 }
 
 .modal1-buttons {
-    margin-top: 50px;
     display: flex;
     justify-content: space-around;
+    margin-top: 20px;
 }
 
 .modal1-buttons button {
@@ -53,11 +38,31 @@
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    background-color: black;
+    background-color: #62DFA6;
     color: white;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .modal1-buttons button:hover {
-    background-color: grey;
+    color: black;
+}
+
+.modal1-buttons button:last-child {
+    background-color: #6c757d;
+}
+
+.modal1-buttons button:last-child:hover {
+    background-color: #5a6268;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
