@@ -62,3 +62,10 @@
   color: #ff6666;
   margin-right: 6px;
 }
+
+.post-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 10px 0;
+}
