@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
 import ArticleComponent from "./ArticleComponent";
 import ConfirmModal from "../../SideComponent/Modal/ConfirmModal";
-import MessageModal from '../../SideComponent/Modal/MessageModal';
+import MessageModal from "../../SideComponent/Modal/MessageModal";
 import "./MainPostBoard.css";
-import { timeSince } from '../DetailPostPage/utils';
+import { timeSince } from "../DetailPostPage/utils";
 
 const ARTICLES_PER_PAGE = 8;
 
@@ -16,7 +16,7 @@ function MainPostBoard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const [articleToDelete, setArticleToDelete] = useState(null);
-    const { user } = useAuth();
+    const { user, logout } = useAuth(); // 추가된 logout 함수
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -57,7 +57,7 @@ function MainPostBoard() {
         const token = localStorage.getItem("userToken");
 
         if (!token) {
-            setModalMessage('로그인이 필요한 서비스입니다.');
+            setModalMessage("로그인이 필요한 서비스입니다.");
             setIsModalOpen(true);
             return;
         }
@@ -73,7 +73,7 @@ function MainPostBoard() {
             const data = await response.json();
 
             if (data.code === "M006" || data.code === "H001") {
-                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
                 setIsModalOpen(true);
                 logout();
                 return;
@@ -135,12 +135,13 @@ function MainPostBoard() {
                         </div>
                     ))}
                 </div>
+                <div className="addArticlesContainer">
+                    <button className="writeBtn" onClick={() => navigate("/write")}>
+                        글쓰기
+                    </button>
+                </div>
             </div>
-            <div className="addArticlesContainer">
-                <button className="writeBtn" onClick={() => navigate("/write")}>
-                    글쓰기
-                </button>
-            </div>
+
             <div className="pagination">
                 {Array.from({ length: Math.ceil(articles.length / ARTICLES_PER_PAGE) }, (_, index) => (
                     <button

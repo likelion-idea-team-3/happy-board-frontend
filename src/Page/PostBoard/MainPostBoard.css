@@ -17,13 +17,14 @@
 }
 
 .otherArticles {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    width: 80%;
+    /* display: grid; */
+    /* grid-template-columns: repeat(4, 1fr); */
     gap: 20px;
 }
 
 .otherArticles > .item {
-    width: 250px;
+    width: 100%;
 }
 
 .movepage {
@@ -62,6 +63,9 @@
 }
 
 .addArticlesContainer {
+    width: 80%;
+    display: flex;
+    justify-content: end;
     margin-top: 20px;
 }
 
