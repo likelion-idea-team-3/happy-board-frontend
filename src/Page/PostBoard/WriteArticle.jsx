@@ -53,7 +53,6 @@ function WriteArticle() {
         }
     }
 
-
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -69,20 +68,9 @@ function WriteArticle() {
         }
     };
 
-    const handleCommand = (command, value = null) => {
-        document.execCommand(command, false, value);
-    };
-
     const handleContentChange = (e) => {
-        const htmlContent = e.target.innerHTML;
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, "text/html");
-
-        const textContent = doc.body.innerText;
-        const imgUrls = Array.from(doc.querySelectorAll("img")).map((img) => img.src);
-
-        const combinedContent = `${textContent}\n${imgUrls.join("\n")}`;
-        setContent(combinedContent);
+        setContent(e.target.value);
+        console.log(content);
     };
 
     const handleTitleChange = (e) => {
@@ -92,27 +80,29 @@ function WriteArticle() {
     const uploadImage = async (imageBlob) => {
         const formData = new FormData();
         formData.append("file", imageBlob);
-
+        
         try {
+            const token = localStorage.getItem("userToken");
             const response = await fetch("http://43.202.192.54:8080/api/files/upload", {
                 method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
                 body: formData,
             });
 
-            const data = await response.json();
+            const data = await response.text();
 
-            if (data.code === "M006" || data.code === "H001") {
+            if (!response.ok || data.code === "M006" || data.code === "H001") {
                 setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
                 setIsModalOpen(true);
                 logout();
                 return null;
             }
 
-            if (!response.ok) {
-                throw new Error("Image upload failed");
-            }
+            console.log("성공");
 
-            return data.url;
+            return data;
         } catch (error) {
             console.error("Error uploading image:", error);
             return null;
@@ -129,9 +119,8 @@ function WriteArticle() {
                     const blob = item.getAsFile();
                     const imgUrl = await uploadImage(blob);
                     if (imgUrl) {
-                        const imgElement = `<img src="${imgUrl}" alt="uploaded image" />`;
-                        document.execCommand("insertHTML", false, imgElement);
-                        setContent((prevContent) => prevContent + "\n" + imgUrl);
+                        const markdownImage = `![image](${imgUrl})`;
+                        setContent((prevContent) => prevContent + markdownImage);
                     }
                 }
             }
@@ -172,11 +161,11 @@ function WriteArticle() {
                         </div>
                         <div className="writePara">
                             <div className="editorToolbar">
-                                <button type="button" onClick={() => handleCommand("bold")}>
+                                <button type="button" onClick={() => document.execCommand("bold")}>
                                     <img className="boldimg" src="https://img.icons8.com/ios-filled/50/b.png" alt="B" />
                                     <span>Bold</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand("italic")}>
+                                <button type="button" onClick={() => document.execCommand("italic")}>
                                     <img
                                         className="italicimg"
                                         src="https://img.icons8.com/ios-filled/50/italic.png"
@@ -184,7 +173,7 @@ function WriteArticle() {
                                     />
                                     <span>Italic</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand("underline")}>
+                                <button type="button" onClick={() => document.execCommand("underline")}>
                                     <img
                                         className="underlineimg"
                                         src="https://img.icons8.com/ios-filled/50/underline.png"
@@ -192,7 +181,7 @@ function WriteArticle() {
                                     />
                                     <span>Underline</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand("foreColor", "red")}>
+                                <button type="button" onClick={() => document.execCommand("foreColor", "red")}>
                                     <img
                                         className="colorimg"
                                         src="https://img.icons8.com/ios-filled/50/color-wheel.png"
@@ -200,7 +189,7 @@ function WriteArticle() {
                                     />
                                     <span>Color</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand("justifyLeft")}>
+                                <button type="button" onClick={() => document.execCommand("justifyLeft")}>
                                     <img
                                         className="alignleftimg"
                                         src="https://img.icons8.com/ios-filled/50/align-left.png"
@@ -208,7 +197,7 @@ function WriteArticle() {
                                     />
                                     <span>Left</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand("justifyCenter")}>
+                                <button type="button" onClick={() => document.execCommand("justifyCenter")}>
                                     <img
                                         className="aligncenterimg"
                                         src="https://img.icons8.com/ios-filled/50/align-center.png"
@@ -216,7 +205,7 @@ function WriteArticle() {
                                     />
                                     <span>Center</span>
                                 </button>
-                                <button type="button" onClick={() => handleCommand("justifyRight")}>
+                                <button type="button" onClick={() => document.execCommand("justifyRight")}>
                                     <img
                                         className="alignrightimg"
                                         src="https://img.icons8.com/ios-filled/50/align-right.png"
@@ -233,14 +222,13 @@ function WriteArticle() {
                                     <span>Photo</span>
                                 </label>
                             </div>
-                            <div
+                            <textarea
                                 id="content"
                                 className="contentEditable"
-                                contentEditable
-                                onInput={handleContentChange}
+                                value={content}
+                                onChange={handleContentChange}
                                 placeholder="내용을 입력하세요"
-                                suppressContentEditableWarning={true}
-                            ></div>
+                            ></textarea>
                         </div>
                     </div>
                     <input type="submit" value="Submit" />
