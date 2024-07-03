@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
 import ArticleComponent from "./ArticleComponent";
 import ConfirmModal from "../../SideComponent/Modal/ConfirmModal";
+import MessageModal from '../../SideComponent/Modal/MessageModal';
 import "./MainPostBoard.css";
 import { timeSince } from '../DetailPostPage/utils';
 
@@ -13,8 +14,10 @@ function MainPostBoard() {
     const [articles, setArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
     const [articleToDelete, setArticleToDelete] = useState(null);
-    const { user } = useAuth(); // useAuth 훅을 사용하여 로그인된 사용자 정보 가져오기
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,12 +26,12 @@ function MainPostBoard() {
 
     const fetchArticles = async () => {
         try {
-            const response = await fetch("http://43.202.192.54:8080/api/boards/happy"); // 데이터를 받아올 URL을 여기에 입력하세요
+            const response = await fetch("http://43.202.192.54:8080/api/boards/happy");
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            console.log("Fetched data:", data); // 데이터 확인 로그
+            console.log("Fetched data:", data);
             if (data.success === "true" && Array.isArray(data.data)) {
                 setArticles(data.data);
             } else {
@@ -69,7 +72,8 @@ function MainPostBoard() {
         const token = localStorage.getItem("userToken");
 
         if (!token) {
-            console.error("No auth token found. Please log in first.");
+            setModalMessage('로그인이 필요한 서비스입니다.');
+            setIsModalOpen(true);
             return;
         }
 
@@ -81,10 +85,18 @@ function MainPostBoard() {
                 },
             });
 
+            const data = await response.json();
+
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return;
+            }
+
             if (!response.ok) {
-                const errorData = await response.json();
-                console.log(errorData);
-                throw new Error(errorData.message || "Network response was not ok");
+                console.log(data);
+                throw new Error(data.message || "Network response was not ok");
             }
 
             console.log("Article deleted successfully");
@@ -116,6 +128,11 @@ function MainPostBoard() {
         navigate(`/post/${articleId}`);
     };
 
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        navigate("/login");
+    };
+
     return (
         <>
             <div className="sortContainer">
@@ -135,7 +152,7 @@ function MainPostBoard() {
                         <div key={article.id} className="item" onClick={() => handleArticleClick(article.id)}>
                             <ArticleComponent
                                 title={article.title}
-                                postedDay={timeSince(article.modifiedAt)}
+                                postedDay={timeSince(article.createdAt)}
                                 writer={article.member.nickname}
                                 showEditButton={user.name === article.member.nickname}
                                 onEdit={(e) => handleEdit(article.id, e)}
@@ -167,6 +184,14 @@ function MainPostBoard() {
                     onConfirm={confirmDelete}
                     onCancel={closeConfirmModal}
                     isOpen={isConfirmModalOpen}
+                />
+            )}
+            {isModalOpen && (
+                <MessageModal
+                    message={modalMessage}
+                    onClose={handleModalClose}
+                    buttonText="확인"
+                    isOpen={isModalOpen}
                 />
             )}
         </>

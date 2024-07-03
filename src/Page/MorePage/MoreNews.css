@@ -106,12 +106,13 @@
   margin-top: 10px;
 }
 
-.footer {
+.more-footer {
   text-align: center;
   margin-top: 20px;
+  cursor: pointer;
 }
 
-.footer p {
+.more-footer p {
   font-size: 24px;
   color: #4CAF50;
   font-weight: 900;

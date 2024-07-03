@@ -84,6 +84,11 @@ function Mypage() {
         setShowDeleteConfirm(true);
     };
 
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        navigate('/login');
+    };
+    
     const confirmDelete = async () => {
         const token = localStorage.getItem("userToken");
         try {
@@ -150,7 +155,8 @@ function Mypage() {
                                     className="post-item"
                                 >
                                     <h2 onClick={() => handlePostClick(post.id)}>{post.title}</h2>
-                                    <p onClick={() => handlePostClick(post.id)}>{post.content}</p>
+                                    <p onClick={() => handlePostClick(post.id)}>...</p>
+                                    <span onClick={() => handlePostClick(post.id)}> 댓글 {post.comments }</span>
                                     <span onClick={() => handlePostClick(post.id)}>{timeSince(post.createdAt)}</span>
                                     <div>
                                         <MdEdit onClick={() => handleEdit(post.id)} />
@@ -182,8 +188,9 @@ function Mypage() {
                                 key={post.id}
                                 className="post-item"
                             >
-                                <h2 onClick={() => handlePostClick(post.id)}>{post.title}</h2>
-                                <p onClick={() => handlePostClick(post.id)}>{post.content}</p>
+                                    <h2 onClick={() => handlePostClick(post.id)}>{post.title}</h2>
+                                    <p onClick={() => handlePostClick(post.id)}>...</p>
+                                    <span onClick={() => handlePostClick(post.id)}> 댓글 {post.comments }</span>
                                 <span onClick={() => handlePostClick(post.id)}>{timeSince(post.createdAt)}</span>
                                 <div>
                                     <MdEdit onClick={() => handleEdit(post.id)} />
@@ -205,6 +212,12 @@ function Mypage() {
                     isOpen={showDeleteConfirm}
                 />
             )}
+            <MessageModal
+                message={modalMessage}
+                onClose={handleModalClose}
+                buttonText="확인"
+                isOpen={isModalOpen}
+            />
         </div>
     );
 }
