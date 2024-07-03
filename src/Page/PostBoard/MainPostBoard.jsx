@@ -7,7 +7,6 @@ import "./MainPostBoard.css";
 const ARTICLES_PER_PAGE = 8;
 
 function MainPostBoard() {
-    const [selected, setSelected] = useState(0);
     const [articles, setArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const { user } = useAuth(); // useAuth 훅을 사용하여 로그인된 사용자 정보 가져오기
@@ -26,7 +25,8 @@ function MainPostBoard() {
             const data = await response.json();
             console.log("Fetched data:", data); // 데이터 확인 로그
             if (data.success === "true" && Array.isArray(data.data)) {
-                setArticles(data.data);
+                const sortedArticles = data.data.sort((a, b) => new Date(b.modifiedAt) - new Date(a.modifiedAt));
+                setArticles(sortedArticles);
             } else {
                 console.error("Fetched data is not in expected format:", data);
             }
@@ -34,21 +34,6 @@ function MainPostBoard() {
             console.error("Failed to fetch articles:", error);
         }
     };
-
-    function startSort(index) {
-        setSelected(index);
-
-        if (index === 0) {
-            const sortedArticles = [...articles].sort((a, b) => new Date(b.modifiedAt) - new Date(a.modifiedAt));
-            setArticles(sortedArticles);
-        } else if (index === 1) {
-            const sortedArticles = [...articles].sort((a, b) => b.viewed - a.viewed);
-            setArticles(sortedArticles);
-        } else if (index === 2) {
-            const sortedArticles = [...articles].sort((a, b) => b.liked - a.liked);
-            setArticles(sortedArticles);
-        }
-    }
 
     const indexOfLastArticle = currentPage * ARTICLES_PER_PAGE;
     const indexOfFirstArticle = indexOfLastArticle - ARTICLES_PER_PAGE;
@@ -117,17 +102,6 @@ function MainPostBoard() {
 
     return (
         <>
-            <div className="sortContainer">
-                <button className={`sortBtn ${selected === 0 ? "active" : ""}`} onClick={() => startSort(0)}>
-                    최신순
-                </button>
-                <button className={`sortBtn ${selected === 1 ? "active" : ""}`} onClick={() => startSort(1)}>
-                    조회순
-                </button>
-                <button className={`sortBtn ${selected === 2 ? "active" : ""}`} onClick={() => startSort(2)}>
-                    좋아요순
-                </button>
-            </div>
             <div className="outercontainer">
                 <div className="otherArticles">
                     {currentArticles.map((article) => (
