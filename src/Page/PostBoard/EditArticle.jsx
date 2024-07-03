@@ -1,5 +1,5 @@
 import "./EditArticle.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./WriteArticle.css";
 import MessageModal from "../../SideComponent/Modal/MessageModal";
@@ -14,6 +14,8 @@ function EditArticle() {
     const [content, setContent] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
+
+    const contentRef = useRef(null);
 
     useEffect(() => {
         fetchArticle();
@@ -64,18 +66,23 @@ function EditArticle() {
                 setArticle(fetchedArticle);
                 setTitle(fetchedArticle.title);
                 setContent(fetchedArticle.content);
+                renderContent(fetchedArticle.content);
             }
         } catch (error) {
             console.error("Failed to fetch article:", error);
         }
     };
 
+    const handleCommand = (command, value = null) => {
+        document.execCommand(command, false, value);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const updatedArticle = {
-            title,
-            content,
+            title: title,
+            content: content,
         };
 
         try {
@@ -89,77 +96,74 @@ function EditArticle() {
             console.log("Updated Article:", data);
             setModalMessage("게시물 수정에 성공 했습니다!");
             setIsModalOpen(true);
-            
         } catch (error) {
             console.error("Failed to update article:", error);
         }
     };
 
-    const handleContentChange = (e) => {
-        setContent(e.target.value);
+    const handleContentChange = async () => {
+        const htmlContent = contentRef.current.innerHTML;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, "text/html");
+
+        const textContent = doc.body.innerText;
+        const imgElements = Array.from(doc.querySelectorAll("img"));
+        let imgUrls = [];
+
+        for (const img of imgElements) {
+            if (img.src.startsWith("data:image")) {
+                const imgUrl = await uploadImage(img.src);
+                imgUrls.push(imgUrl);
+            } else {
+                imgUrls.push(img.src);
+            }
+        }
+
+        const combinedContent = `${textContent}\n${imgUrls.join("\n")}`;
+        setContent(combinedContent);
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     };
 
-    const uploadImage = async (imageBlob) => {
+    const renderContent = (content) => {
+        const lines = content.split("\n");
+        let html = "";
+
+        lines.forEach((line) => {
+            if (line.startsWith("http://") || line.startsWith("https://")) {
+                html += `<img src="${line}" alt="image" />`;
+            } else {
+                html += `<p>${line}</p>`;
+            }
+        });
+
+        contentRef.current.innerHTML = html;
+    };
+
+    const uploadImage = async (base64Image) => {
         const formData = new FormData();
-        formData.append("file", imageBlob);
+        const blob = await fetch(base64Image).then((res) => res.blob());
+        formData.append("file", blob);
 
         try {
-            const token = localStorage.getItem("userToken");
             const response = await fetch("http://43.202.192.54:8080/api/files/upload", {
                 method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
                 body: formData,
             });
 
-            const data = await response.text();
-
-            if (!response.ok || data.code === "M006" || data.code === "H001") {
-                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
-                setIsModalOpen(true);
-                logout();
-                return null;
+            if (!response.ok) {
+                throw new Error("Image upload failed");
             }
 
-            console.log("성공");
-
-            return data;
+            const data = await response.json();
+            return data.url; // assuming the server returns the URL in the 'url' field
         } catch (error) {
             console.error("Error uploading image:", error);
             return null;
         }
     };
-
-    const handlePaste = async (event) => {
-        const clipboardData = event.clipboardData;
-        if (clipboardData) {
-            const items = clipboardData.items;
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i];
-                if (item.type.indexOf("image") !== -1) {
-                    const blob = item.getAsFile();
-                    const imgUrl = await uploadImage(blob);
-                    if (imgUrl) {
-                        const markdownImage = `![image](${imgUrl})`;
-                        setContent((prevContent) => prevContent + markdownImage);
-                    }
-                }
-            }
-        }
-    };
-
-    useEffect(() => {
-        const contentEditableElement = document.getElementById("content");
-        if (contentEditableElement) {
-            contentEditableElement.addEventListener("paste", handlePaste);
-            return () => contentEditableElement.removeEventListener("paste", handlePaste);
-        }
-    }, []);
 
     const handleModalClose = () => {
         setIsModalOpen(false);
@@ -191,11 +195,11 @@ function EditArticle() {
                         </div>
                         <div className="writePara">
                             <div className="editorToolbar">
-                                <button type="button" onClick={() => document.execCommand("bold")}>
+                                <button type="button" onClick={() => handleCommand("bold")}>
                                     <img className="boldimg" src="https://img.icons8.com/ios-filled/50/b.png" alt="B" />
                                     <span>Bold</span>
                                 </button>
-                                <button type="button" onClick={() => document.execCommand("italic")}>
+                                <button type="button" onClick={() => handleCommand("italic")}>
                                     <img
                                         className="italicimg"
                                         src="https://img.icons8.com/ios-filled/50/italic.png"
@@ -203,7 +207,7 @@ function EditArticle() {
                                     />
                                     <span>Italic</span>
                                 </button>
-                                <button type="button" onClick={() => document.execCommand("underline")}>
+                                <button type="button" onClick={() => handleCommand("underline")}>
                                     <img
                                         className="underlineimg"
                                         src="https://img.icons8.com/ios-filled/50/underline.png"
@@ -211,7 +215,7 @@ function EditArticle() {
                                     />
                                     <span>Underline</span>
                                 </button>
-                                <button type="button" onClick={() => document.execCommand("foreColor", "red")}>
+                                <button type="button" onClick={() => handleCommand("foreColor", "red")}>
                                     <img
                                         className="colorimg"
                                         src="https://img.icons8.com/ios-filled/50/color-wheel.png"
@@ -219,7 +223,7 @@ function EditArticle() {
                                     />
                                     <span>Color</span>
                                 </button>
-                                <button type="button" onClick={() => document.execCommand("justifyLeft")}>
+                                <button type="button" onClick={() => handleCommand("justifyLeft")}>
                                     <img
                                         className="alignleftimg"
                                         src="https://img.icons8.com/ios-filled/50/align-left.png"
@@ -227,7 +231,7 @@ function EditArticle() {
                                     />
                                     <span>Left</span>
                                 </button>
-                                <button type="button" onClick={() => document.execCommand("justifyCenter")}>
+                                <button type="button" onClick={() => handleCommand("justifyCenter")}>
                                     <img
                                         className="aligncenterimg"
                                         src="https://img.icons8.com/ios-filled/50/align-center.png"
@@ -235,7 +239,7 @@ function EditArticle() {
                                     />
                                     <span>Center</span>
                                 </button>
-                                <button type="button" onClick={() => document.execCommand("justifyRight")}>
+                                <button type="button" onClick={() => handleCommand("justifyRight")}>
                                     <img
                                         className="alignrightimg"
                                         src="https://img.icons8.com/ios-filled/50/align-right.png"
@@ -243,22 +247,17 @@ function EditArticle() {
                                     />
                                     <span>Right</span>
                                 </button>
-                                <label htmlFor="fileInput" className="fileInputLabel">
-                                    <img
-                                        className="photoimg"
-                                        src="https://img.icons8.com/ios-filled/50/photo.png"
-                                        alt="Photo"
-                                    />
-                                    <span>Photo</span>
-                                </label>
                             </div>
-                            <textarea
+                            <div
                                 id="content"
                                 className="contentEditable"
-                                value={content}
-                                onChange={handleContentChange}
+                                contentEditable
+                                ref={contentRef}
+                                onBlur={handleContentChange}
+                                dangerouslySetInnerHTML={{ __html: content }}
                                 placeholder="내용을 입력하세요"
-                            ></textarea>
+                                suppressContentEditableWarning={true}
+                            ></div>
                         </div>
                     </div>
                     <input type="submit" value="Update" />
