@@ -57,6 +57,7 @@ function EditArticle() {
 
         return data;
     };
+
     const fetchArticle = async () => {
         try {
             const data = await authenticatedFetch(`http://43.202.192.54:8080/api/boards/happy/${id}`);
@@ -100,13 +101,23 @@ function EditArticle() {
         }
     };
 
-    const handleContentChange = () => {
+    const handleContentChange = async () => {
         const htmlContent = contentRef.current.innerHTML;
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, "text/html");
 
         const textContent = doc.body.innerText;
-        const imgUrls = Array.from(doc.querySelectorAll("img")).map((img) => img.src);
+        const imgElements = Array.from(doc.querySelectorAll("img"));
+        let imgUrls = [];
+
+        for (const img of imgElements) {
+            if (img.src.startsWith("data:image")) {
+                const imgUrl = await uploadImage(img.src);
+                imgUrls.push(imgUrl);
+            } else {
+                imgUrls.push(img.src);
+            }
+        }
 
         const combinedContent = `${textContent}\n${imgUrls.join("\n")}`;
         setContent(combinedContent);
@@ -129,6 +140,29 @@ function EditArticle() {
         });
 
         contentRef.current.innerHTML = html;
+    };
+
+    const uploadImage = async (base64Image) => {
+        const formData = new FormData();
+        const blob = await fetch(base64Image).then((res) => res.blob());
+        formData.append("file", blob);
+
+        try {
+            const response = await fetch("http://43.202.192.54:8080/api/files/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("Image upload failed");
+            }
+
+            const data = await response.json();
+            return data.url; // assuming the server returns the URL in the 'url' field
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            return null;
+        }
     };
 
     const handleModalClose = () => {
@@ -213,14 +247,6 @@ function EditArticle() {
                                     />
                                     <span>Right</span>
                                 </button>
-                                <label htmlFor="fileInput" className="fileInputLabel">
-                                    <img
-                                        className="photoimg"
-                                        src="https://img.icons8.com/ios-filled/50/photo.png"
-                                        alt="Photo"
-                                    />
-                                    <span>Photo</span>
-                                </label>
                             </div>
                             <div
                                 id="content"

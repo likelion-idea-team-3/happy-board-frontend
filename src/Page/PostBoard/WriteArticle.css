@@ -114,3 +114,7 @@ input[type="submit"]:hover {
     font-size: 16px;
     background-color: #fff;
 }
+
+.contentInput {
+    height: 250px;
+}
