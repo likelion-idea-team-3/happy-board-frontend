@@ -1,17 +1,23 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import MessageModal from '../../SideComponent/Modal/MessageModal';
+import { useAuth } from "../../SideComponent/Header/AuthContext";
 import "./WriteArticle.css";
 
 function WriteArticle() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     async function postArticle(url, articleData) {
         const token = localStorage.getItem("userToken");
 
         if (!token) {
-            console.error("No token found. Please log in first.");
+            setModalMessage('로그인이 필요한 서비스입니다.');
+            setIsModalOpen(true);
             return;
         }
 
@@ -25,18 +31,28 @@ function WriteArticle() {
                 body: JSON.stringify(articleData),
             });
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.log(errorData);
-                throw new Error(errorData.message || "Network response was not ok");
+            const data = await response.json();
+
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return;
             }
 
-            const data = await response.json();
+            if (!response.ok) {
+                console.log(data);
+                throw new Error(data.message || "Network response was not ok");
+            }
+
             console.log("Article posted successfully:", data);
+            setModalMessage('게시글 작성에 성공하였습니다!');
+            setIsModalOpen(true);
         } catch (error) {
             console.error("Error posting article:", error);
         }
     }
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -48,7 +64,6 @@ function WriteArticle() {
 
         try {
             await postArticle("http://43.202.192.54:8080/api/boards/happy", articleData);
-            navigate("/"); // 게시물 작성 후 메인 페이지로 이동
         } catch (error) {
             console.error("Failed to post article:", error);
         }
@@ -84,12 +99,20 @@ function WriteArticle() {
                 body: formData,
             });
 
+            const data = await response.json();
+
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return null;
+            }
+
             if (!response.ok) {
                 throw new Error("Image upload failed");
             }
 
-            const data = await response.json();
-            return data.url; // assuming the server returns the URL in the 'url' field
+            return data.url;
         } catch (error) {
             console.error("Error uploading image:", error);
             return null;
@@ -122,6 +145,15 @@ function WriteArticle() {
             return () => contentEditableElement.removeEventListener("paste", handlePaste);
         }
     }, []);
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        if (modalMessage === '게시글 작성에 성공하였습니다!') {
+            navigate("/post");
+        } else {
+            navigate("/login");
+        }
+    };
 
     return (
         <>
@@ -214,6 +246,12 @@ function WriteArticle() {
                     <input type="submit" value="Submit" />
                 </form>
             </div>
+            <MessageModal
+                message={modalMessage}
+                onClose={handleModalClose}
+                buttonText="확인"
+                isOpen={isModalOpen}
+            />
         </>
     );
 }

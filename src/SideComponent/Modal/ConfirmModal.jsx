@@ -9,8 +9,6 @@ const ConfirmModal = ({
     confirmText = "확인",
     cancelText = "취소",
 }) => {
-
-
     if (!isOpen) return null;
     return (
         <div className="modal1-overlay" onClick={onCancel}>

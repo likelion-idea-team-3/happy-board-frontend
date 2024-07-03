@@ -5,7 +5,19 @@ import { timeSince } from "./utils";
 function PostContent({ post }) {
     const parseContent = (content) => {
         const urlRegex = /(https?:\/\/[^\s]+)/g;
-        return content.replace(urlRegex, (url) => `<img src="${url}" alt="첨부된 이미지" class="post-image"/>`);
+        const urls = content.match(urlRegex);
+
+        if (urls && urls.length === 1) {
+            return content.replace(urlRegex, (url) => `<img src="${url}" alt="첨부된 이미지" class="post-image single-image"/>`);
+        } else {
+            let parts = content.split(urlRegex);
+            return parts.map((part, index) => {
+                if (urlRegex.test(part)) {
+                    return `<img src="${part}" alt="첨부된 이미지" class="post-image"/>`;
+                }
+                return part;
+            }).join('');
+        }
     };
 
     return (

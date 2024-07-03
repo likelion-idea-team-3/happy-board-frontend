@@ -84,6 +84,11 @@ function Mypage() {
         setShowDeleteConfirm(true);
     };
 
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        navigate('/login');
+    };
+    
     const confirmDelete = async () => {
         const token = localStorage.getItem("userToken");
         try {
@@ -205,6 +210,12 @@ function Mypage() {
                     isOpen={showDeleteConfirm}
                 />
             )}
+            <MessageModal
+                message={modalMessage}
+                onClose={handleModalClose}
+                buttonText="확인"
+                isOpen={isModalOpen}
+            />
         </div>
     );
 }
