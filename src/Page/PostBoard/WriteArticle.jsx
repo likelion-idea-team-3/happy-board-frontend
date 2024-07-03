@@ -108,6 +108,7 @@ function WriteArticle() {
                         </div>
                         <div className="writePara">
                             <ReactQuill
+                                className="contentInput"
                                 value={content}
                                 onChange={setContent}
                                 modules={modules}
