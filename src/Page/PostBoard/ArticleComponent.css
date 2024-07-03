@@ -1,112 +1,80 @@
-.articleComponent {
-    border: 1px solid black;
-    border-radius: 5%;
-    overflow: hidden;
+.articleComponent-horizontal {
+    display: flex;
+    align-items: center;
     padding: 10px;
-    margin: 10px 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative; /* 상단 띠를 위한 상대 위치 */
-}
-
-.colorStripe {
-    height: 5px;
-    width: 100%;
-    background-color: #007bff; /* 원하는 색상으로 변경 */
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-top-left-radius: 5%;
-    border-top-right-radius: 5%;
-}
-
-.textbox {
-    display: flex;
-    flex-direction: column;
+    border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
-    margin-top: 10px; /* 상단 띠와 텍스트 간격을 위해 추가 */
+    justify-content: space-between;
+    width: 100%; /* 부모 컨테이너의 너비를 모두 차지하도록 설정 */
 }
 
-.textcategori {
-    padding: 0.7rem;
+.textbox-horizontal {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex: 1; /* 텍스트 박스가 가능한 한 많은 공간을 차지하도록 설정 */
+    margin-right: 10px; /* 버튼과 텍스트 사이의 간격 추가 */
+    margin-top: 20px;
+    min-width: 0; /* 내용이 넘칠 때 줄바꿈 되도록 설정 */
 }
 
 .textheader {
-    padding: 1rem;
-    font-size: 24px;
+    font-size: 1.2em;
     font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* 긴 텍스트가 넘칠 때 생략표시(...) */
 }
 
+.writer,
 .postedDay {
-    padding: 1rem;
-    text-align: right;
-    font-size: 14px;
-    color: gray;
+    font-size: 0.9em;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.writer {
-    padding: 0.5rem;
+.buttonContainer-horizontal {
     display: flex;
-    justify-content: start;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.addArticlesContainer {
-    width: 90%;
-    display: flex;
-    justify-content: end;
-    align-items: center;
-    margin: 20px;
-}
-
-.addArticlesContainer > button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background-color: #007bff;
-    color: white;
-    transition: background-color 0.3s, transform 0.3s;
-}
-
-.addArticlesContainer > button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-}
-
-.buttonContainer {
-    display: flex;
-    justify-content: flex-start; /* 좌측 정렬 */
-    gap: 10px; /* 버튼 사이 간격 */
-    margin-top: 10px;
+    gap: 10px;
 }
 
 .editBtn,
 .deleteBtn {
-    background-color: #4caf50;
+    background: #007bff;
     color: white;
-    padding: 6px 10px; /* 버튼 크기 축소 */
     border: none;
-    border-radius: 4px;
+    padding: 5px 10px;
     cursor: pointer;
-    font-size: 12px; /* 폰트 크기 축소 */
+    white-space: nowrap; /* 버튼 텍스트가 줄바꿈되지 않도록 설정 */
+    border-radius: 10px;
     transition: background-color 0.3s, transform 0.3s;
 }
 
+.editBtn {
+    background: #28a745;
+}
+
 .editBtn:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+    background: #218838;
+}
+
+.editBtn:active {
+    background: #1e7e34;
+    transform: scale(0.95);
 }
 
 .deleteBtn {
-    background-color: #f44336;
+    background: #dc3545;
 }
 
 .deleteBtn:hover {
-    background-color: #e31b0c;
-    transform: scale(1.05);
+    background: #c82333;
+}
+
+.deleteBtn:active {
+    background: #bd2130;
+    transform: scale(0.95);
 }

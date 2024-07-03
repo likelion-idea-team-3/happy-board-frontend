@@ -109,7 +109,7 @@ function WriteArticle() {
                 body: formData,
             });
 
-            // const data = await response.json();
+            const data = await response.json();
 
             // if (data.code === "M006" || data.code === "H001") {
             //     setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
