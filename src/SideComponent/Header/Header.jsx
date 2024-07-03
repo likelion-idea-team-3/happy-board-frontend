@@ -37,14 +37,18 @@ function Header() {
             console.log("EventSource connected");
         };
 
-        eventSource.onmessage = function (event) {
-            const newMessage = JSON.parse(event.data);
-            setNotifications(prev => [...prev, newMessage]);
-            alert(`New notification from ${newMessage.nickname}: ${newMessage.content}`);
-            console.log("Received message:", newMessage);
-        };
+        eventSource.addEventListener("sse", async (event) => {
+            try {
+                console.log("Raw event data:", event.data);  // 추가된 로그
+                const parsedData = JSON.parse(event.data);
+                setNotifications(prev => [...prev, parsedData]);
+                console.log("Received message:", parsedData);
+            } catch (error) {
+                console.error("Failed to parse event data:", error);
+            }
+        });
 
-        eventSource.onerror = function (event) {
+        eventSource.onerror = (event) => {
             console.error("EventSource failed:", event);
             if (event.status === 401 || event.status === 403) {
                 console.error("Unauthorized or Forbidden. Logging out...");
@@ -80,6 +84,14 @@ function Header() {
         setShowNotifications(!showNotifications);
     };
 
+    const markAsRead = (index) => {
+        setNotifications(notifications.map((notification, i) => 
+            i === index ? { ...notification, isRead: true } : notification
+        ));
+    };
+
+    const unreadCount = notifications.filter(notification => !notification.isRead).length;
+
     return (
         <>
             <div className="Header-Container">
@@ -110,12 +122,12 @@ function Header() {
                                     님
                                     <button onClick={handleLogout}>로그아웃</button>
                                 </li>
-                                <li className="notification-icon">
+                                {/* <li className="notification-icon">
                                     <BsBellFill onClick={toggleNotifications} />
-                                    {notifications.length > 0 && (
-                                        <span className="notification-count">{notifications.length}</span>
+                                    {unreadCount > 0 && (
+                                        <span className="notification-count">{unreadCount}</span>
                                     )}
-                                </li>
+                                </li> */}
                             </>
                         ) : (
                             <li>
@@ -129,10 +141,10 @@ function Header() {
                 <div className="notification-dropdown">
                     <ul>
                         {notifications.map((notification, index) => (
-                            <li key={index}>
+                            <li key={index} className={!notification.isRead ? 'unread' : ''} onClick={() => markAsRead(index)}>
                                 <p><strong>{notification.nickname}</strong></p>
                                 <p>{notification.content}</p>
-                                <p>{notification.url}</p>
+                                <p><Link to={notification.url}>Link</Link></p>
                             </li>
                         ))}
                     </ul>
