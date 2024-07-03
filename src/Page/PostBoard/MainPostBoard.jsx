@@ -135,12 +135,13 @@ function MainPostBoard() {
                         </div>
                     ))}
                 </div>
+                <div className="addArticlesContainer">
+                    <button className="writeBtn" onClick={() => navigate("/write")}>
+                        글쓰기
+                    </button>
+                </div>
             </div>
-            <div className="addArticlesContainer">
-                <button className="writeBtn" onClick={() => navigate("/write")}>
-                    글쓰기
-                </button>
-            </div>
+
             <div className="pagination">
                 {Array.from({ length: Math.ceil(articles.length / ARTICLES_PER_PAGE) }, (_, index) => (
                     <button

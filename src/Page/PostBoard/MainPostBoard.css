@@ -63,6 +63,9 @@
 }
 
 .addArticlesContainer {
+    width: 80%;
+    display: flex;
+    justify-content: end;
     margin-top: 20px;
 }
 
