@@ -38,6 +38,7 @@ function EditArticle() {
 
         if (!response.ok) {
             const errorData = await response.json();
+            console.log(errorData);
             throw new Error(errorData.message || "Network response was not ok");
         }
 
@@ -52,6 +53,7 @@ function EditArticle() {
                 setArticle(fetchedArticle);
                 setTitle(fetchedArticle.title);
                 setContent(fetchedArticle.content);
+                renderContent(fetchedArticle.content);
             }
         } catch (error) {
             console.error("Failed to fetch article:", error);
@@ -86,11 +88,34 @@ function EditArticle() {
     };
 
     const handleContentChange = () => {
-        setContent(contentRef.current.innerHTML);
+        const htmlContent = contentRef.current.innerHTML;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, "text/html");
+
+        const textContent = doc.body.innerText;
+        const imgUrls = Array.from(doc.querySelectorAll("img")).map((img) => img.src);
+
+        const combinedContent = `${textContent}\n${imgUrls.join("\n")}`;
+        setContent(combinedContent);
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
+    };
+
+    const renderContent = (content) => {
+        const lines = content.split("\n");
+        let html = "";
+
+        lines.forEach((line) => {
+            if (line.startsWith("http://") || line.startsWith("https://")) {
+                html += `<img src="${line}" alt="image" />`;
+            } else {
+                html += `<p>${line}</p>`;
+            }
+        });
+
+        contentRef.current.innerHTML = html;
     };
 
     if (!article) {

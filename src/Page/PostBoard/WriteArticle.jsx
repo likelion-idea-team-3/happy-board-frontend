@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./WriteArticle.css";
 
@@ -59,12 +59,69 @@ function WriteArticle() {
     };
 
     const handleContentChange = (e) => {
-        setContent(e.target.textContent);
+        const htmlContent = e.target.innerHTML;
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, "text/html");
+
+        const textContent = doc.body.innerText;
+        const imgUrls = Array.from(doc.querySelectorAll("img")).map((img) => img.src);
+
+        const combinedContent = `${textContent}\n${imgUrls.join("\n")}`;
+        setContent(combinedContent);
     };
 
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     };
+
+    const uploadImage = async (imageBlob) => {
+        const formData = new FormData();
+        formData.append("file", imageBlob);
+
+        try {
+            const response = await fetch("http://43.202.192.54:8080/api/files/upload", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error("Image upload failed");
+            }
+
+            const data = await response.json();
+            return data.url; // assuming the server returns the URL in the 'url' field
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            return null;
+        }
+    };
+
+    const handlePaste = async (event) => {
+        const clipboardData = event.clipboardData;
+        if (clipboardData) {
+            const items = clipboardData.items;
+            for (let i = 0; i < items.length; i++) {
+                const item = items[i];
+                if (item.type.indexOf("image") !== -1) {
+                    const blob = item.getAsFile();
+                    const imgUrl = await uploadImage(blob);
+                    if (imgUrl) {
+                        const imgElement = `<img src="${imgUrl}" alt="uploaded image" />`;
+                        document.execCommand("insertHTML", false, imgElement);
+                        setContent((prevContent) => prevContent + "\n" + imgUrl);
+                    }
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        const contentEditableElement = document.getElementById("content");
+        if (contentEditableElement) {
+            contentEditableElement.addEventListener("paste", handlePaste);
+            return () => contentEditableElement.removeEventListener("paste", handlePaste);
+        }
+    }, []);
 
     return (
         <>
