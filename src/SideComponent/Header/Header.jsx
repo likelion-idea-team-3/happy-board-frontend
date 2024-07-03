@@ -37,17 +37,16 @@ function Header() {
             console.log("EventSource connected");
         };
 
-        eventSource.onmessage = async (event) => {
+        eventSource.addEventListener("sse", async (event) => {
             try {
-                const res = await event.data;
-                const parsedData = JSON.parse(res);
+                console.log("Raw event data:", event.data);  // 추가된 로그
+                const parsedData = JSON.parse(event.data);
                 setNotifications(prev => [...prev, parsedData]);
-                alert(`New notification from ${parsedData.nickname}: ${parsedData.content}`);
                 console.log("Received message:", parsedData);
             } catch (error) {
                 console.error("Failed to parse event data:", error);
             }
-        };
+        });
 
         eventSource.onerror = (event) => {
             console.error("EventSource failed:", event);

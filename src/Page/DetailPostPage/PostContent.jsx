@@ -4,20 +4,27 @@ import { timeSince } from "./utils";
 
 function PostContent({ post }) {
     const parseContent = (content) => {
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const urls = content.match(urlRegex);
+        const regex = /!\[image\]\((https?:\/\/[^\s)]+)\)/g;
+        const parts = [];
+        let lastIndex = 0;
 
-        if (urls && urls.length === 1) {
-            return content.replace(urlRegex, (url) => `<img src="${url}" alt="첨부된 이미지" class="post-image single-image"/>`);
-        } else {
-            let parts = content.split(urlRegex);
-            return parts.map((part, index) => {
-                if (urlRegex.test(part)) {
-                    return `<img src="${part}" alt="첨부된 이미지" class="post-image"/>`;
-                }
-                return part;
-            }).join('');
+        let match;
+        while ((match = regex.exec(content)) !== null) {
+            // Add text before the image
+            if (match.index > lastIndex) {
+                parts.push(content.substring(lastIndex, match.index));
+            }
+            // Add the image
+            parts.push(<img key={match[1]} src={match[1]} alt="첨부된 이미지" className="post-image" />);
+            lastIndex = regex.lastIndex;
         }
+
+        // Add the remaining text after the last image
+        if (lastIndex < content.length) {
+            parts.push(content.substring(lastIndex));
+        }
+
+        return parts;
     };
 
     const renderTimeInfo = () => {
@@ -37,10 +44,9 @@ function PostContent({ post }) {
                 <span className="post-info">{renderTimeInfo()}</span>
             </div>
             <div className="post-detail-center">
-                <div
-                    className="post-content"
-                    dangerouslySetInnerHTML={{ __html: parseContent(post.data.content) }}
-                />
+                <div className="post-content">
+                    {parseContent(post.data.content)}
+                </div>
             </div>
         </div>
     );
