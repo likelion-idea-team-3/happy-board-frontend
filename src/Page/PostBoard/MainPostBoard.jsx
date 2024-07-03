@@ -166,6 +166,7 @@ function MainPostBoard() {
                     message="정말 게시물을 삭제 하시겠습니까?"
                     onConfirm={confirmDelete}
                     onCancel={closeConfirmModal}
+                    isOpen={isConfirmModalOpen}
                 />
             )}
         </>
