@@ -51,7 +51,7 @@ function Header() {
                 </nav>
                 <nav className="Nav-Menu-Login">
                     <ul>
-                        {user ? (
+                        {user.name !== "qwejhqwekljahFKASIEJNFLOASIJ" ? (
                             <li>
                                 <span
                                     onClick={() => {
@@ -78,6 +78,7 @@ function Header() {
                     onCancel={cancelLogout}
                     confirmText="로그아웃"
                     cancelText="취소"
+                    isOpen={showLogoutConfirm}
                 />
             )}
         </>

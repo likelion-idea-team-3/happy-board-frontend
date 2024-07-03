@@ -3,13 +3,14 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState("사용자");
-    
+    const [user, setUser] = useState({ name: "qwejhqwekljahFKASIEJNFLOASIJ" });
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
             setUser(JSON.parse(storedUser));
+        } else {
+            setUser({ name: "qwejhqwekljahFKASIEJNFLOASIJ" });
         }
     }, []);
 
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem("user");
         localStorage.removeItem("userToken");
-        setUser(null);
+        setUser({ name: "qwejhqwekljahFKASIEJNFLOASIJ" });
     };
 
     return (

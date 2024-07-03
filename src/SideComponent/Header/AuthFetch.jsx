@@ -1,13 +1,22 @@
-import { useAuth } from "./SideComponent/Header/AuthContext";
+import { useAuth } from "./AuthContext";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ConfirmModal from "../Modal/ConfirmModal";
 
-const AuthFetch = () => {
+const useAuthFetch = () => {
     const { logout } = useAuth();
     const [isSessionExpired, setIsSessionExpired] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const navigate = useNavigate();
 
     const fetchWithAuth = async (url, options = {}) => {
         const token = localStorage.getItem("userToken");
+
+        if (!token) {
+            setModalMessage('로그인이 필요한 서비스입니다.');
+            setIsSessionExpired(true);
+            return;
+        }
 
         if (!options.headers) {
             options.headers = {};
@@ -19,7 +28,8 @@ const AuthFetch = () => {
             const response = await fetch(url, options);
             const data = await response.json();
 
-            if (data.code === "M006") {
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
                 setIsSessionExpired(true);
                 logout();
             }
@@ -31,7 +41,12 @@ const AuthFetch = () => {
         }
     };
 
-    return { fetchWithAuth, isSessionExpired, setIsSessionExpired };
+    const handleSessionExpired = () => {
+        setIsSessionExpired(false);
+        navigate('/login');
+    };
+
+    return { fetchWithAuth, isSessionExpired, modalMessage, handleSessionExpired };
 };
 
-export default AuthFetch;
+export default useAuthFetch;

@@ -6,7 +6,9 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { timeSince } from "./utils";
 import { MdDeleteForever } from "react-icons/md";
 import { MdModeEditOutline } from "react-icons/md";
-import ConfirmModal from "../../SideComponent/Modal/ConfirmModal"; // Adjust the path as needed
+import ConfirmModal from "../../SideComponent/Modal/ConfirmModal";
+import { useNavigate } from "react-router-dom";
+import MessageModal from '../../SideComponent/Modal/MessageModal';
 
 function PostComment({ postId }) {
     const [comments, setComments] = useState([]);
@@ -19,12 +21,22 @@ function PostComment({ postId }) {
     const [editComment, setEditComment] = useState(null);
     const [editContent, setEditContent] = useState("");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
+    const [modalMessage, setModalMessage] = useState("");
+    const navigate = useNavigate();
 
     const fetchComments = async () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem("userToken");
+
+            if (!token) {
+                setModalMessage('로그인이 필요한 서비스입니다.');
+                setIsModalOpen(true);
+                return;
+            }
+
             const response = await fetch(
                 `http://43.202.192.54:8080/api/board/comment/comments/${postId}`,
                 {
@@ -34,6 +46,12 @@ function PostComment({ postId }) {
                 }
             );
             const data = await response.json();
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return;
+            }
             if (data.success === "true") {
                 setComments(data.data);
             }
@@ -61,6 +79,11 @@ function PostComment({ postId }) {
         if (newComment.trim()) {
             try {
                 const token = localStorage.getItem("userToken");
+                if (!token) {
+                    setModalMessage('로그인이 필요한 서비스입니다.');
+                    setIsModalOpen(true);
+                    return;
+                }
                 const response = await fetch(
                     "http://43.202.192.54:8080/api/board/comment",
                     {
@@ -77,7 +100,12 @@ function PostComment({ postId }) {
                 );
 
                 const data = await response.json();
-                console.log(data);
+                if (data.code === "M006" || data.code === "H001") {
+                    setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                    setIsModalOpen(true);
+                    logout();
+                    return;
+                }
                 if (data.success === "true") {
                     setNewComment("");
                     fetchComments();
@@ -95,6 +123,11 @@ function PostComment({ postId }) {
         if (newReply.trim()) {
             try {
                 const token = localStorage.getItem("userToken");
+                if (!token) {
+                    setModalMessage('로그인이 필요한 서비스입니다.');
+                    setIsModalOpen(true);
+                    return;
+                }
                 const response = await fetch(
                     "http://43.202.192.54:8080/api/board/comment",
                     {
@@ -112,7 +145,12 @@ function PostComment({ postId }) {
                 );
 
                 const data = await response.json();
-                console.log(data);
+                if (data.code === "M006" || data.code === "H001") {
+                    setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                    setIsModalOpen(true);
+                    logout();
+                    return;
+                }
                 if (data.success === "true") {
                     setNewReply("");
                     setCurrentReply(null);
@@ -155,6 +193,13 @@ function PostComment({ postId }) {
         if (editContent.trim()) {
             try {
                 const token = localStorage.getItem("userToken");
+
+                if (!token) {
+                    setModalMessage('로그인이 필요한 서비스입니다.');
+                    setIsModalOpen(true);
+                    return;
+                }
+
                 const response = await fetch(
                     `http://43.202.192.54:8080/api/board/comment/${editComment.id}`,
                     {
@@ -170,7 +215,14 @@ function PostComment({ postId }) {
                 );
 
                 const data = await response.json();
-                console.log(data);
+
+                if (data.code === "M006" || data.code === "H001") {
+                    setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                    setIsModalOpen(true);
+                    logout();
+                    return;
+                }
+
                 if (data.success === "true") {
                     setEditComment(null);
                     setEditContent("");
@@ -187,6 +239,11 @@ function PostComment({ postId }) {
     const handleDeleteComment = async () => {
         try {
             const token = localStorage.getItem("userToken");
+            if (!token) {
+                setModalMessage('로그인이 필요한 서비스입니다.');
+                setIsModalOpen(true);
+                return;
+            }
             const response = await fetch(
                 `http://43.202.192.54:8080/api/board/comment/${commentToDelete}`,
                 {
@@ -198,7 +255,12 @@ function PostComment({ postId }) {
             );
 
             const data = await response.json();
-            console.log(data);
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return;
+            }
             if (data.success === "true") {
                 fetchComments();
             } else {
@@ -212,6 +274,11 @@ function PostComment({ postId }) {
         }
     };
 
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        navigate('/login');
+    };
+
     const openConfirmModal = (commentId, e) => {
         e.stopPropagation();
         setCommentToDelete(commentId);
@@ -222,6 +289,8 @@ function PostComment({ postId }) {
         setShowConfirmModal(false);
         setCommentToDelete(null);
     };
+
+
 
     return (
         <div className="post-comments">
@@ -518,6 +587,12 @@ function PostComment({ postId }) {
                 onConfirm={handleDeleteComment}
                 onCancel={closeConfirmModal}
                 isOpen={showConfirmModal}
+            />
+            <MessageModal
+                message={modalMessage}
+                onClose={handleModalClose}
+                buttonText="확인"
+                isOpen={isModalOpen}
             />
         </div>
     );
