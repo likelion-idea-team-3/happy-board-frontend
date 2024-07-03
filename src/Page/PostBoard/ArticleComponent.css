@@ -1,9 +1,7 @@
 .articleComponent-horizontal {
     display: flex;
     align-items: center;
-    padding: 10px;
     border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
     justify-content: space-between;
     width: 100%; /* 부모 컨테이너의 너비를 모두 차지하도록 설정 */
 }
