@@ -234,14 +234,6 @@ function WriteArticle() {
                                     />
                                     <span>Right</span>
                                 </button>
-                                <label htmlFor="fileInput" className="fileInputLabel">
-                                    <img
-                                        className="photoimg"
-                                        src="https://img.icons8.com/ios-filled/50/photo.png"
-                                        alt="Photo"
-                                    />
-                                    <span>Photo</span>
-                                </label>
                             </div>
                             <div
                                 id="content"
