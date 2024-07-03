@@ -91,7 +91,14 @@
 }
 
 .Nav-Menu-Login ul {
-    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+.Nav-Menu-Login li {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
 }
 
 .Nav-Menu-Login button {
@@ -113,6 +120,13 @@
     margin-right: 10px;
 }
 
+.Nav-Menu-Login svg {
+    position: relative;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
 .Menu-Icon {
     display: none;
 }
@@ -126,6 +140,7 @@
 }
 
 @media (max-width: 1200px) {
+    .notification-dropdown,
     .Nav-Menu,
     .Nav-Menu-Login {
         display: none;
@@ -164,6 +179,7 @@
         margin: 0px 20px;
         padding: 0 10px;
     }
+
 }
 
 .notification-icon {
@@ -172,27 +188,20 @@
     color: white;
 }
 
-.notification-count {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background-color: red;
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 12px;
-}
-
 .notification-dropdown {
-    position: absolute;
-    right: 10%;
-    top: 11%;
+    position: fixed;
+    right: 5px; 
+    top: 85px; 
     background-color: white;
-    width: 100px;
-    height: 100px;
     border: 1px solid #ccc;
     border-radius: 5px;
     z-index: 1000;
+    text-align: center;
+    width: 330px; 
+    padding: 20px;
+    box-shadow: 0px 20px 12px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    animation: fadeIn 0.3s ease-out;
 }
 
 .notification-dropdown ul {
@@ -201,11 +210,27 @@
     margin: 0;
 }
 
-.notification-dropdown li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+.notification-success p,
+.notification-warn p{
+    font-size: 15px;
 }
 
-.notification-dropdown li:last-child {
-    border-bottom: none;
+.notification-success svg,
+.notification-warn svg {
+    font-size: 40px;
+}
+
+.notification-warn svg {
+    color: red;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

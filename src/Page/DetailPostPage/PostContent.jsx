@@ -8,6 +8,7 @@ function PostContent({ post }) {
         const parts = [];
         let lastIndex = 0;
 
+        console.log(post.data.id);
         let match;
         while ((match = regex.exec(content)) !== null) {
             // Add text before the image
