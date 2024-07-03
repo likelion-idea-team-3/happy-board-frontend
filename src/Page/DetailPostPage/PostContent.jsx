@@ -20,12 +20,21 @@ function PostContent({ post }) {
         }
     };
 
+    const renderTimeInfo = () => {
+        const { createdAt, modifiedAt } = post.data;
+        if (createdAt === modifiedAt) {
+            return timeSince(createdAt);
+        } else {
+            return `최근 수정 (${timeSince(modifiedAt)})`;
+        }
+    };
+
     return (
         <div className="post-detail">
             <h1 className="post-title">{post.data.title}</h1>
             <div className="post-detail-top">
                 <span className="post-author">{post.data.member.nickname}</span>
-                <span className="post-info">{timeSince(post.data.createdAt)}</span>
+                <span className="post-info">{renderTimeInfo()}</span>
             </div>
             <div className="post-detail-center">
                 <div

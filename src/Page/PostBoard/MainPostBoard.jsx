@@ -152,7 +152,7 @@ function MainPostBoard() {
                         <div key={article.id} className="item" onClick={() => handleArticleClick(article.id)}>
                             <ArticleComponent
                                 title={article.title}
-                                postedDay={timeSince(article.modifiedAt)}
+                                postedDay={timeSince(article.createdAt)}
                                 writer={article.member.nickname}
                                 showEditButton={user.name === article.member.nickname}
                                 onEdit={(e) => handleEdit(article.id, e)}
