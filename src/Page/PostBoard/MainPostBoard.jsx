@@ -2,14 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
 import ArticleComponent from "./ArticleComponent";
+import ConfirmModal from "../../SideComponent/Modal/ConfirmModal";
+import MessageModal from '../../SideComponent/Modal/MessageModal';
 import "./MainPostBoard.css";
+import { timeSince } from '../DetailPostPage/utils';
 
 const ARTICLES_PER_PAGE = 8;
 
 function MainPostBoard() {
     const [articles, setArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const { user } = useAuth(); // useAuth 훅을 사용하여 로그인된 사용자 정보 가져오기
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
+    const [articleToDelete, setArticleToDelete] = useState(null);
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,12 +25,12 @@ function MainPostBoard() {
 
     const fetchArticles = async () => {
         try {
-            const response = await fetch("http://43.202.192.54:8080/api/boards/happy"); // 데이터를 받아올 URL을 여기에 입력하세요
+            const response = await fetch("http://43.202.192.54:8080/api/boards/happy");
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
             const data = await response.json();
-            console.log("Fetched data:", data); // 데이터 확인 로그
+            console.log("Fetched data:", data);
             if (data.success === "true" && Array.isArray(data.data)) {
                 const sortedArticles = data.data.sort((a, b) => new Date(b.modifiedAt) - new Date(a.modifiedAt));
                 setArticles(sortedArticles);
@@ -41,7 +48,8 @@ function MainPostBoard() {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    const handleEdit = (articleId) => {
+    const handleEdit = (articleId, e) => {
+        e.stopPropagation();
         navigate(`/edit/${articleId}`);
     };
 
@@ -49,7 +57,8 @@ function MainPostBoard() {
         const token = localStorage.getItem("userToken");
 
         if (!token) {
-            console.error("No auth token found. Please log in first.");
+            setModalMessage('로그인이 필요한 서비스입니다.');
+            setIsModalOpen(true);
             return;
         }
 
@@ -61,10 +70,18 @@ function MainPostBoard() {
                 },
             });
 
+            const data = await response.json();
+
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return;
+            }
+
             if (!response.ok) {
-                const errorData = await response.json();
-                console.log(errorData);
-                throw new Error(errorData.message || "Network response was not ok");
+                console.log(data);
+                throw new Error(data.message || "Network response was not ok");
             }
 
             console.log("Article deleted successfully");
@@ -74,45 +91,46 @@ function MainPostBoard() {
         }
     };
 
-    function timeAgo(dateText) {
-        const date = new Date(dateText);
-        const now = new Date();
-        const diff = now - date;
+    const openConfirmModal = (articleId, e) => {
+        e.stopPropagation();
+        setArticleToDelete(articleId);
+        setIsConfirmModalOpen(true);
+    };
 
-        const minutes = Math.floor(diff / (1000 * 60));
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
-        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+    const closeConfirmModal = () => {
+        setIsConfirmModalOpen(false);
+        setArticleToDelete(null);
+    };
 
-        if (minutes < 1) {
-            return "방금";
-        } else if (minutes < 60) {
-            return `${minutes}분 전`;
-        } else if (hours < 24) {
-            return `${hours}시간 전`;
-        } else if (days < 30) {
-            return `${days}일 전`;
-        } else if (months < 12) {
-            return `${months}달 전`;
-        } else {
-            return `${years}년 전`;
+    const confirmDelete = () => {
+        if (articleToDelete) {
+            handleDelete(articleToDelete);
         }
-    }
+        closeConfirmModal();
+    };
+
+    const handleArticleClick = (articleId) => {
+        navigate(`/post/${articleId}`);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        navigate("/login");
+    };
 
     return (
         <>
             <div className="outercontainer">
                 <div className="otherArticles">
                     {currentArticles.map((article) => (
-                        <div key={article.id} className="item">
+                        <div key={article.id} className="item" onClick={() => handleArticleClick(article.id)}>
                             <ArticleComponent
                                 title={article.title}
-                                postedDay={timeAgo(article.modifiedAt)}
+                                postedDay={timeSince(article.createdAt)}
                                 writer={article.member.nickname}
-                                showEditButton={user.name === article.member.nickname} // 로그인된 사용자와 게시글 작성자가 같은지 확인
-                                onEdit={() => handleEdit(article.id)}
-                                onDelete={() => handleDelete(article.id)}
+                                showEditButton={user.name === article.member.nickname}
+                                onEdit={(e) => handleEdit(article.id, e)}
+                                onDelete={(e) => openConfirmModal(article.id, e)}
                             />
                         </div>
                     ))}
@@ -134,6 +152,22 @@ function MainPostBoard() {
                     </button>
                 ))}
             </div>
+            {isConfirmModalOpen && (
+                <ConfirmModal
+                    message="정말 게시물을 삭제 하시겠습니까?"
+                    onConfirm={confirmDelete}
+                    onCancel={closeConfirmModal}
+                    isOpen={isConfirmModalOpen}
+                />
+            )}
+            {isModalOpen && (
+                <MessageModal
+                    message={modalMessage}
+                    onClose={handleModalClose}
+                    buttonText="확인"
+                    isOpen={isModalOpen}
+                />
+            )}
         </>
     );
 }

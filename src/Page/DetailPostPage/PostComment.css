@@ -107,19 +107,21 @@
 
 .comment-input {
     flex: 1;
-    padding: 10px;
+    padding: 10px; 
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-right: 10px;
 }
 
 .comment-submit {
-    padding: 10px 20px;
+    padding: 11px 20px;
     border: none;
     border-radius: 5px;
     background-color: #f77c7c;
     color: white;
     cursor: pointer;
+    margin-bottom: auto;
+    margin-right: 5px;
 }
 
 .comment-submit:hover {
@@ -139,4 +141,17 @@
     font-size: 15px;
     background-color: #f9f9f9;
     cursor: pointer;
+}
+
+.edit-comment-form {
+    display: flex;
+    margin-top: 10px;
+}
+
+.comment-submit.comment-cancel {
+    background-color: #4CAF50;
+}
+
+.comment-submit.comment-cancel:hover {
+    background-color: #45a049;
 }

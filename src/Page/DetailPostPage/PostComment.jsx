@@ -6,6 +6,9 @@ import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { timeSince } from "./utils";
 import { MdDeleteForever } from "react-icons/md";
 import { MdModeEditOutline } from "react-icons/md";
+import ConfirmModal from "../../SideComponent/Modal/ConfirmModal";
+import { useNavigate } from "react-router-dom";
+import MessageModal from '../../SideComponent/Modal/MessageModal';
 
 function PostComment({ postId }) {
     const [comments, setComments] = useState([]);
@@ -17,11 +20,23 @@ function PostComment({ postId }) {
     const [currentReply, setCurrentReply] = useState(null);
     const [editComment, setEditComment] = useState(null);
     const [editContent, setEditContent] = useState("");
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [commentToDelete, setCommentToDelete] = useState(null);
+    const [modalMessage, setModalMessage] = useState("");
+    const navigate = useNavigate();
 
     const fetchComments = async () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem("userToken");
+
+            if (!token) {
+                setModalMessage('로그인이 필요한 서비스입니다.');
+                setIsModalOpen(true);
+                return;
+            }
+
             const response = await fetch(
                 `http://43.202.192.54:8080/api/board/comment/comments/${postId}`,
                 {
@@ -31,6 +46,12 @@ function PostComment({ postId }) {
                 }
             );
             const data = await response.json();
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return;
+            }
             if (data.success === "true") {
                 setComments(data.data);
             }
@@ -58,6 +79,11 @@ function PostComment({ postId }) {
         if (newComment.trim()) {
             try {
                 const token = localStorage.getItem("userToken");
+                if (!token) {
+                    setModalMessage('로그인이 필요한 서비스입니다.');
+                    setIsModalOpen(true);
+                    return;
+                }
                 const response = await fetch(
                     "http://43.202.192.54:8080/api/board/comment",
                     {
@@ -74,7 +100,12 @@ function PostComment({ postId }) {
                 );
 
                 const data = await response.json();
-                console.log(data);
+                if (data.code === "M006" || data.code === "H001") {
+                    setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                    setIsModalOpen(true);
+                    logout();
+                    return;
+                }
                 if (data.success === "true") {
                     setNewComment("");
                     fetchComments();
@@ -92,6 +123,11 @@ function PostComment({ postId }) {
         if (newReply.trim()) {
             try {
                 const token = localStorage.getItem("userToken");
+                if (!token) {
+                    setModalMessage('로그인이 필요한 서비스입니다.');
+                    setIsModalOpen(true);
+                    return;
+                }
                 const response = await fetch(
                     "http://43.202.192.54:8080/api/board/comment",
                     {
@@ -109,7 +145,12 @@ function PostComment({ postId }) {
                 );
 
                 const data = await response.json();
-                console.log(data);
+                if (data.code === "M006" || data.code === "H001") {
+                    setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                    setIsModalOpen(true);
+                    logout();
+                    return;
+                }
                 if (data.success === "true") {
                     setNewReply("");
                     setCurrentReply(null);
@@ -138,6 +179,7 @@ function PostComment({ postId }) {
     };
 
     const handleEditComment = (comment) => {
+        setCurrentReply(null);
         setEditComment(comment);
         setEditContent(comment.content);
     };
@@ -151,6 +193,13 @@ function PostComment({ postId }) {
         if (editContent.trim()) {
             try {
                 const token = localStorage.getItem("userToken");
+
+                if (!token) {
+                    setModalMessage('로그인이 필요한 서비스입니다.');
+                    setIsModalOpen(true);
+                    return;
+                }
+
                 const response = await fetch(
                     `http://43.202.192.54:8080/api/board/comment/${editComment.id}`,
                     {
@@ -166,7 +215,14 @@ function PostComment({ postId }) {
                 );
 
                 const data = await response.json();
-                console.log(data);
+
+                if (data.code === "M006" || data.code === "H001") {
+                    setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                    setIsModalOpen(true);
+                    logout();
+                    return;
+                }
+
                 if (data.success === "true") {
                     setEditComment(null);
                     setEditContent("");
@@ -180,11 +236,16 @@ function PostComment({ postId }) {
         }
     };
 
-    const handleDeleteComment = async (commentId) => {
+    const handleDeleteComment = async () => {
         try {
             const token = localStorage.getItem("userToken");
+            if (!token) {
+                setModalMessage('로그인이 필요한 서비스입니다.');
+                setIsModalOpen(true);
+                return;
+            }
             const response = await fetch(
-                `http://43.202.192.54:8080/api/board/comment/${commentId}`,
+                `http://43.202.192.54:8080/api/board/comment/${commentToDelete}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -194,7 +255,12 @@ function PostComment({ postId }) {
             );
 
             const data = await response.json();
-            console.log(data);
+            if (data.code === "M006" || data.code === "H001") {
+                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setIsModalOpen(true);
+                logout();
+                return;
+            }
             if (data.success === "true") {
                 fetchComments();
             } else {
@@ -202,8 +268,29 @@ function PostComment({ postId }) {
             }
         } catch (error) {
             console.error("댓글 삭제 중 오류 발생:", error);
+        } finally {
+            setShowConfirmModal(false);
+            setCommentToDelete(null);
         }
     };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+        navigate('/login');
+    };
+
+    const openConfirmModal = (commentId, e) => {
+        e.stopPropagation();
+        setCommentToDelete(commentId);
+        setShowConfirmModal(true);
+    };
+
+    const closeConfirmModal = () => {
+        setShowConfirmModal(false);
+        setCommentToDelete(null);
+    };
+
+
 
     return (
         <div className="post-comments">
@@ -257,9 +344,10 @@ function PostComment({ postId }) {
                                                     }
                                                 />
                                                 <MdDeleteForever
-                                                    onClick={() =>
-                                                        handleDeleteComment(
-                                                            comment.id
+                                                    onClick={(e) =>
+                                                        openConfirmModal(
+                                                            comment.id,
+                                                            e
                                                         )
                                                     }
                                                 />
@@ -354,9 +442,10 @@ function PostComment({ postId }) {
                                                                     }
                                                                 />
                                                                 <MdDeleteForever
-                                                                    onClick={() =>
-                                                                        handleDeleteComment(
-                                                                            reply.id
+                                                                    onClick={(e) =>
+                                                                        openConfirmModal(
+                                                                            reply.id,
+                                                                            e
                                                                         )
                                                                     }
                                                                 />
@@ -366,6 +455,44 @@ function PostComment({ postId }) {
                                                     <div className="comment-content">
                                                         <p>{reply.content}</p>
                                                     </div>
+                                                    {editComment &&
+                                                        editComment.id ===
+                                                            reply.id && (
+                                                            <form
+                                                                className="edit-comment-form"
+                                                                onSubmit={
+                                                                    handleEditSubmit
+                                                                }
+                                                            >
+                                                                <input
+                                                                    type="text"
+                                                                    value={
+                                                                        editContent
+                                                                    }
+                                                                    onChange={
+                                                                        handleEditChange
+                                                                    }
+                                                                    className="comment-input"
+                                                                />
+                                                                <button
+                                                                    type="submit"
+                                                                    className="comment-submit comment-send"
+                                                                >
+                                                                    수정
+                                                                </button>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() =>
+                                                                        setEditComment(
+                                                                            null
+                                                                        )
+                                                                    }
+                                                                    className="comment-submit comment-cancel"
+                                                                >
+                                                                    취소
+                                                                </button>
+                                                            </form>
+                                                        )}
                                                 </div>
                                             </div>
                                         ))}
@@ -423,29 +550,50 @@ function PostComment({ postId }) {
                                         </button>
                                     </form>
                                 )}
+                                {editComment && editComment.id === comment.id && (
+                                    <form
+                                        className="edit-comment-form"
+                                        onSubmit={handleEditSubmit}
+                                    >
+                                        <input
+                                            type="text"
+                                            value={editContent}
+                                            onChange={handleEditChange}
+                                            className="comment-input"
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="comment-submit comment-send"
+                                        >
+                                            수정
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setEditComment(null)
+                                            }
+                                            className="comment-submit comment-cancel"
+                                        >
+                                            취소
+                                        </button>
+                                    </form>
+                                )}
                             </div>
                         ))
                 )}
             </div>
-            {editComment && (
-                <form className="edit-comment-form" onSubmit={handleEditSubmit}>
-                    <input
-                        type="text"
-                        value={editContent}
-                        onChange={handleEditChange}
-                        className="comment-input"
-                    />
-                    <button type="submit" className="comment-submit">
-                        수정 완료
-                    </button>
-                    <button
-                        onClick={() => setEditComment(null)}
-                        className="comment-cancel"
-                    >
-                        취소
-                    </button>
-                </form>
-            )}
+            <ConfirmModal
+                message="정말 댓글을 삭제 하시겠습니까?"
+                onConfirm={handleDeleteComment}
+                onCancel={closeConfirmModal}
+                isOpen={showConfirmModal}
+            />
+            <MessageModal
+                message={modalMessage}
+                onClose={handleModalClose}
+                buttonText="확인"
+                isOpen={isModalOpen}
+            />
         </div>
     );
 }

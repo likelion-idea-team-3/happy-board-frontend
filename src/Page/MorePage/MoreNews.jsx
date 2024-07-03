@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import "./MoreNews.css";
+import { useNavigate } from 'react-router-dom';
 
 function MoreNews() {
   const benefitRef = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const options = {
@@ -76,8 +78,8 @@ function MoreNews() {
         </div>
       </section>
       
-      <footer className="footer">
-        <p>여러분도 긍정 게시판에 참여해보세요!</p>
+      <footer className="more-footer">
+        <p onClick={() => {navigate('/post')}}>여러분도 긍정 게시판에 참여해보세요!</p>
       </footer>
     </div>
   );

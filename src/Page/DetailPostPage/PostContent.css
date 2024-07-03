@@ -16,14 +16,12 @@
 .post-title,
 .post-author,
 .post-info,
-.post-content{
+.post-content {
   padding: 10px;
   background-color: #fff;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-
 
 .post-title {
   font-size: 26px;
@@ -48,6 +46,9 @@
 
 .post-content {
   font-size: 17px;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+  line-height: 1.6;
 }
 
 .post-detail-bottom {
@@ -61,4 +62,18 @@
   font-size: 24px;
   color: #ff6666;
   margin-right: 6px;
+}
+
+.post-content img.post-image {
+  max-width: 30%;
+  height: auto;
+  object-fit: contain;
+  margin: 10px;
+  display: inline-block;
+}
+
+.single-image {
+  display: block;
+  margin: 10px auto;
+  max-width: 60%;
 }
