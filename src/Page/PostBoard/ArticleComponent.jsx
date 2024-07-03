@@ -18,14 +18,14 @@ function ArticleComponent(props) {
                     </div>
                 </Link>
                 {props.showEditButton && (
-                    <>
+                    <div className="buttonContainer">
                         <button className="editBtn" onClick={props.onEdit}>
                             수정
                         </button>
                         <button className="deleteBtn" onClick={props.onDelete}>
                             삭제
                         </button>
-                    </>
+                    </div>
                 )}
             </div>
         </>

@@ -2,23 +2,31 @@
     border: 1px solid black;
     border-radius: 5%;
     overflow: hidden;
+    padding: 10px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .imgbox {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 img {
-    width: auto;
+    width: 100%;
     height: auto;
     overflow: hidden;
     object-fit: cover;
+    border-radius: 5%;
 }
 
 .textbox {
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
 }
 
 .textcategori {
@@ -27,13 +35,15 @@ img {
 
 .textheader {
     padding: 1rem;
-    font-size: 32px;
+    font-size: 24px;
     font-weight: bold;
 }
 
 .postedDay {
     padding: 1rem;
     text-align: right;
+    font-size: 14px;
+    color: gray;
 }
 
 .writer {
@@ -41,6 +51,8 @@ img {
     display: flex;
     justify-content: start;
     align-items: center;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 .addArticlesContainer {
@@ -52,22 +64,52 @@ img {
 }
 
 .addArticlesContainer > button {
-    padding: 10px 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.editBtn {
+.addArticlesContainer > button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-between; /* 좌우로 버튼 배치 */
+    margin-top: 10px;
+}
+
+.editBtn,
+.deleteBtn {
+    width: 60px;
+    height: 40px;
     background-color: #4caf50;
     color: white;
-    padding: 8px 12px;
+    padding: 6px 10px; /* 버튼 크기 축소 */
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: 15px; /* 폰트 크기 축소 */
     transition: background-color 0.3s, transform 0.3s;
 }
 
 .editBtn:hover {
     background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.deleteBtn {
+    background-color: #f44336;
+    margin-left: 10px;
+}
+
+.deleteBtn:hover {
+    background-color: #e31b0c;
     transform: scale(1.05);
 }

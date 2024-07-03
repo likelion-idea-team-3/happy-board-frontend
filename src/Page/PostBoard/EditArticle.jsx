@@ -2,8 +2,8 @@ import "./EditArticle.css";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./WriteArticle.css";
-import MessageModal from '../../SideComponent/Modal/MessageModal';
-import { useAuth } from '../../SideComponent/Header/AuthContext';
+import MessageModal from "../../SideComponent/Modal/MessageModal";
+import { useAuth } from "../../SideComponent/Header/AuthContext";
 
 function EditArticle() {
     const { id } = useParams();
@@ -24,7 +24,7 @@ function EditArticle() {
     const authenticatedFetch = async (url, options = {}) => {
         const token = localStorage.getItem("userToken");
         if (!token) {
-            setModalMessage('로그인이 필요한 서비스입니다.');
+            setModalMessage("로그인이 필요한 서비스입니다.");
             setIsModalOpen(true);
             return;
         }
@@ -44,7 +44,7 @@ function EditArticle() {
         const data = await response.json();
 
         if (data.code === "M006" || data.code === "H001") {
-            setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+            setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
             setIsModalOpen(true);
             logout();
             return;
@@ -93,7 +93,7 @@ function EditArticle() {
                 body: JSON.stringify(updatedArticle),
             });
             console.log("Updated Article:", data);
-            setModalMessage('게시물 수정에 성공 했습니다!');
+            setModalMessage("게시물 수정에 성공 했습니다!");
             setIsModalOpen(true);
         } catch (error) {
             console.error("Failed to update article:", error);
@@ -131,16 +131,15 @@ function EditArticle() {
         contentRef.current.innerHTML = html;
     };
 
-
     const handleModalClose = () => {
         setIsModalOpen(false);
-        if (modalMessage === '게시물 수정에 성공 했습니다!') {
+        if (modalMessage === "게시물 수정에 성공 했습니다!") {
             navigate("/post");
         } else {
             navigate("/login");
         }
     };
-    
+
     if (!article) {
         return <div>Loading...</div>;
     }
@@ -238,12 +237,7 @@ function EditArticle() {
                     <input type="submit" value="Update" />
                 </form>
             </div>
-            <MessageModal
-                message={modalMessage}
-                onClose={handleModalClose}
-                buttonText="확인"
-                isOpen={isModalOpen}
-            />
+            <MessageModal message={modalMessage} onClose={handleModalClose} buttonText="확인" isOpen={isModalOpen} />
         </>
     );
 }
