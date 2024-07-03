@@ -34,27 +34,20 @@
 }
 
 .modal1-buttons button {
-    padding: 10px 20px;
+    padding: 5px 20px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    background-color: #62DFA6;
+    background-color: black;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .modal1-buttons button:hover {
-    color: black;
-}
-
-.modal1-buttons button:last-child {
-    background-color: #6c757d;
-}
-
-.modal1-buttons button:last-child:hover {
     background-color: #5a6268;
 }
+
 
 @keyframes fadeIn {
     from {

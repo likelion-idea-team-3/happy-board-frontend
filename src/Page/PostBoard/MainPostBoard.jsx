@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
 import ArticleComponent from "./ArticleComponent";
+import ConfirmModal from "../../SideComponent/Modal/ConfirmModal";
 import "./MainPostBoard.css";
+import { timeSince } from '../DetailPostPage/utils';
 
 const ARTICLES_PER_PAGE = 8;
 
@@ -10,6 +12,8 @@ function MainPostBoard() {
     const [selected, setSelected] = useState(0);
     const [articles, setArticles] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [articleToDelete, setArticleToDelete] = useState(null);
     const { user } = useAuth(); // useAuth 훅을 사용하여 로그인된 사용자 정보 가져오기
     const navigate = useNavigate();
 
@@ -56,7 +60,8 @@ function MainPostBoard() {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    const handleEdit = (articleId) => {
+    const handleEdit = (articleId, e) => {
+        e.stopPropagation();
         navigate(`/edit/${articleId}`);
     };
 
@@ -89,31 +94,27 @@ function MainPostBoard() {
         }
     };
 
-    function timeAgo(dateText) {
-        const date = new Date(dateText);
-        const now = new Date();
-        const diff = now - date;
+    const openConfirmModal = (articleId, e) => {
+        e.stopPropagation();
+        setArticleToDelete(articleId);
+        setIsConfirmModalOpen(true);
+    };
 
-        const minutes = Math.floor(diff / (1000 * 60));
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
-        const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+    const closeConfirmModal = () => {
+        setIsConfirmModalOpen(false);
+        setArticleToDelete(null);
+    };
 
-        if (minutes < 1) {
-            return "방금";
-        } else if (minutes < 60) {
-            return `${minutes}분 전`;
-        } else if (hours < 24) {
-            return `${hours}시간 전`;
-        } else if (days < 30) {
-            return `${days}일 전`;
-        } else if (months < 12) {
-            return `${months}달 전`;
-        } else {
-            return `${years}년 전`;
+    const confirmDelete = () => {
+        if (articleToDelete) {
+            handleDelete(articleToDelete);
         }
-    }
+        closeConfirmModal();
+    };
+
+    const handleArticleClick = (articleId) => {
+        navigate(`/post/${articleId}`);
+    };
 
     return (
         <>
@@ -131,14 +132,14 @@ function MainPostBoard() {
             <div className="outercontainer">
                 <div className="otherArticles">
                     {currentArticles.map((article) => (
-                        <div key={article.id} className="item">
+                        <div key={article.id} className="item" onClick={() => handleArticleClick(article.id)}>
                             <ArticleComponent
                                 title={article.title}
-                                postedDay={timeAgo(article.modifiedAt)}
+                                postedDay={timeSince(article.modifiedAt)}
                                 writer={article.member.nickname}
-                                showEditButton={user.name === article.member.nickname} // 로그인된 사용자와 게시글 작성자가 같은지 확인
-                                onEdit={() => handleEdit(article.id)}
-                                onDelete={() => handleDelete(article.id)}
+                                showEditButton={user.name === article.member.nickname}
+                                onEdit={(e) => handleEdit(article.id, e)}
+                                onDelete={(e) => openConfirmModal(article.id, e)}
                             />
                         </div>
                     ))}
@@ -160,6 +161,13 @@ function MainPostBoard() {
                     </button>
                 ))}
             </div>
+            {isConfirmModalOpen && (
+                <ConfirmModal
+                    message="정말 게시물을 삭제 하시겠습니까?"
+                    onConfirm={confirmDelete}
+                    onCancel={closeConfirmModal}
+                />
+            )}
         </>
     );
 }
