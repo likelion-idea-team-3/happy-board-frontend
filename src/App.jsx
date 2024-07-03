@@ -40,7 +40,7 @@ function App() {
                 <Route path="/post" element={<MainPostBoard />} />
                 <Route path="/post/:postId" element={<DetailPost />} />
                 <Route path="/mypost" element={<Mypage />} />
-                <Route path="/edit" element={<EditArticle />} />
+                <Route path="/edit/:id" element={<EditArticle />} />
                 <Route path="/write" element={<WriteArticle />} />
                 <Route path="*" element={<NonePage />} />
             </Routes>
