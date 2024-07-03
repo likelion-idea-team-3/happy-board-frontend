@@ -9,16 +9,13 @@ const ConfirmModal = ({
     cancelText = "취소",
 }) => {
     return (
-        <div className="modal-content">
-            <div className="modal-header">
-                <button className="close-button" onClick={onCancel}>
-                    ×
-                </button>
-            </div>
-            <p>{message}</p>
-            <div className="modal-buttons">
-                <button onClick={onConfirm}>{confirmText}</button>
-                <button onClick={onCancel}>{cancelText}</button>
+        <div className="modal1-overlay" onClick={onCancel}>
+            <div className="modal1-content" onClick={(e) => e.stopPropagation()}>
+                <p>{message}</p>
+                <div className="modal1-buttons">
+                    <button onClick={onConfirm}>{confirmText}</button>
+                    <button onClick={onCancel}>{cancelText}</button>
+                </div>
             </div>
         </div>
     );

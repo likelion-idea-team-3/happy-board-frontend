@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Modal from '../loginForm/Forgot/Modal/Modal'; // 모달 컴포넌트 import
-import ForgotPassword from '../loginForm/Forgot/ForgotPassword'; // 아이디 찾기 컴포넌트 import
-import ForgotUsername from '../loginForm/Forgot/ForgotId'; // 비밀번호 찾기 컴포넌트 import
+import { useAuth } from "../../SideComponent/Header/AuthContext.jsx";
+import MessageModal from '../../SideComponent/Modal/MessageModal.jsx';
+import Modal from '../loginForm/Forgot/Modal/Modal';
+import ForgotPassword from '../loginForm/Forgot/ForgotPassword';
+import ForgotUsername from '../loginForm/Forgot/ForgotId'; 
 import './LoginForm.css';
 
 const LoginForm = () => {
@@ -11,9 +13,13 @@ const LoginForm = () => {
     password: '',
   });
   const [error, setError] = useState('');
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // 비밀번호 찾기 모달 열림 상태 추가
-  const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false); // 아이디 찾기 모달 열림 상태 추가
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); 
+  const [isUsernameModalOpen, setIsUsernameModalOpen] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [navigateOnClose, setNavigateOnClose] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,26 +33,37 @@ const LoginForm = () => {
     e.preventDefault();
     setError('');
 
-    // 백엔드 API 요청 (백엔드 팀이 준비한 API 사용)
     try {
-      const response = await fetch('https://api.example.com/login', {
+      const body = JSON.stringify({ email: formData.email, password: formData.password });
+      const response = await fetch('http://43.202.192.54:8080/api/members/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: body
       });
-
-      if (!response.ok) {
-        throw new Error('로그인에 실패했습니다.');
-      }
 
       const result = await response.json();
       console.log('로그인 성공:', result);
-
-      // 성공 시 추가 작업 (예: 리디렉션)
+      
+      if (result.success === "true") {
+        localStorage.setItem("userToken", result.data.token);
+        login({ name: result.data.nickname });
+        console.log(result.data.token);
+        setMessage(`${result.data.nickname}님 반갑습니다!`);
+        setNavigateOnClose(true);
+        setIsMessageModalOpen(true);
+      } else {
+        console.error("로그인 오류 : 400", result.msg);
+        setMessage(result.msg);
+        setNavigateOnClose(false);
+        setIsMessageModalOpen(true);
+      }
     } catch (error) {
-      setError(error.message);
+      console.error("로그인 오류:", error);
+      setMessage('로그인에 실패했습니다.');
+      setNavigateOnClose(false);
+      setIsMessageModalOpen(true);
     }
   };
 
@@ -55,20 +72,24 @@ const LoginForm = () => {
   };
 
   const handleForgotPassword = () => {
-    // 비밀번호 찾기 모달 열기
     setIsPasswordModalOpen(true);
   };
 
   const handleForgotUsername = () => {
-    // 아이디 찾기 모달 열기
     setIsUsernameModalOpen(true);
   };
 
   const closeModal = () => {
-    // 모달 닫기 함수
     setIsPasswordModalOpen(false);
     setIsUsernameModalOpen(false);
   };
+
+  const closeMessageModal = () => {
+    setIsMessageModalOpen(false);
+    if (navigateOnClose) {
+      navigate("/");
+    }
+  }
 
   return (
     <div className="login-form-container">
@@ -106,7 +127,6 @@ const LoginForm = () => {
       <Modal isOpen={isPasswordModalOpen} onClose={closeModal}>
         <div>
           <h3>비밀번호 찾기</h3>
-          {/* 비밀번호 찾기 컴포넌트 */}
           <ForgotPassword onClose={closeModal} />
         </div>
       </Modal>
@@ -115,10 +135,14 @@ const LoginForm = () => {
       <Modal isOpen={isUsernameModalOpen} onClose={closeModal}>
         <div>
           <h3>아이디 찾기</h3>
-          {/* 아이디 찾기 컴포넌트 */}
           <ForgotUsername onClose={closeModal} />
         </div>
       </Modal>
+      <MessageModal
+        message={message}
+        isOpen={isMessageModalOpen}
+        onClose={closeMessageModal}
+      />
     </div>
   );
 };

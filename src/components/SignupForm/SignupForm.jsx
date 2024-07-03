@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Modal from 'react-modal';
+import MessageModal from '../../SideComponent/Modal/MessageModal';
 import './SignupForm.css';
 
 Modal.setAppElement('#root');
@@ -21,6 +22,9 @@ const SignupForm = () => {
   const [isPromoModalOpen, setIsPromoModalOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState(false);
+  const [message, setMessage] = useState('');
+  const [navigateOnClose, setNavigateOnClose] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -51,22 +55,32 @@ const SignupForm = () => {
     }
 
     try {
-      const response = await fetch('https://api.example.com/signup', {
+      const response = await fetch('http://43.202.192.54:8080/api/members/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          nickname: formData.nickname,
+        }),
       });
 
-      if (!response.ok) {
-        throw new Error('회원가입에 실패했습니다.');
-      }
-
       const result = await response.json();
-      console.log('회원가입 성공:', result);
+
+      if (result.success === "true") {
+        setMessage(`회원가입이 성공적으로 완료되었습니다!`);
+        setNavigateOnClose(true);
+        setIsMessageModalOpen(true);
+      } else {
+        throw new Error(result.msg || '회원가입에 실패했습니다.');
+      }
     } catch (error) {
-      setError(error.message);
+      setMessage(error.message);
+      setNavigateOnClose(false);
+      setIsMessageModalOpen(true);
     }
   };
 
@@ -85,6 +99,13 @@ const SignupForm = () => {
   const toggleTermsModal = () => {
     setIsTermsModalOpen(!isTermsModalOpen);
   };
+
+  const closeMessageModal = () => {
+    setIsMessageModalOpen(false);
+    if (navigateOnClose) {
+      navigate("/login");
+    }
+  }
 
   return (
     <div className="signup-form-container">
@@ -268,6 +289,11 @@ const SignupForm = () => {
           <button className="close-btn" onClick={toggleTermsModal}>닫기</button>
         </div>
       </Modal>
+      <MessageModal
+        message={message}
+        isOpen={isMessageModalOpen}
+        onClose={closeMessageModal}
+      />
     </div>
   );
 };

@@ -8,7 +8,7 @@ function Footer() {
       <nav className="Footer-Menu">
         <ul>
           <li>
-            <Link to="/about">About</Link>
+            <Link to="/more">About</Link>
           </li>
           <li>
             <Link to="/contact">Contact</Link>

@@ -1,8 +1,8 @@
 import "./App.css";
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 
-import SignupForm from './components/signupForm/SignupForm';
+import SignupForm from './components/SignupForm/SignupForm';
 import MainPage from "./Page/MainPage/MainPage";
 import LoginForm from './components/loginForm/LoginForm';
 import Header from "./SideComponent/Header/Header";
