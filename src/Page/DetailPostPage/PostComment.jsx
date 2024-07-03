@@ -29,21 +29,9 @@ function PostComment({ postId }) {
     const fetchComments = async () => {
         setIsLoading(true);
         try {
-            const token = localStorage.getItem("userToken");
-
-            if (!token) {
-                setModalMessage('로그인이 필요한 서비스입니다.');
-                setIsModalOpen(true);
-                return;
-            }
-
             const response = await fetch(
                 `http://43.202.192.54:8080/api/board/comment/comments/${postId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+
             );
             const data = await response.json();
             if (data.code === "M006" || data.code === "H001") {
@@ -290,13 +278,13 @@ function PostComment({ postId }) {
         setCommentToDelete(null);
     };
 
-
-
     return (
         <div className="post-comments">
             <form className="comment-form" onSubmit={handleCommentSubmit}>
-                <div className="comment-input-group">
-                    <div className="user-name">{user.name}</div>
+                <div className="comment-input-group">{user.name !== "qwejhqwekljahFKASIEJNFLOASIJ" ? <div className="user-name">{user.name}</div>
+                     : (
+                        <div className="user-name">{" "}</div>
+                    )}
                     <div className="input-group">
                         <input
                             type="text"

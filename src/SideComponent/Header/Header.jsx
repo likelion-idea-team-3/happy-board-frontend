@@ -3,9 +3,10 @@ import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import { useAuth } from "./AuthContext";
-import { BsBellFill } from "react-icons/bs";
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import ConfirmModal from "../Modal/ConfirmModal";
+import { TbExclamationMark } from "react-icons/tb";
+import { AiOutlineSafety } from "react-icons/ai";
 
 function Header() {
     const { user, logout } = useAuth();
@@ -39,10 +40,16 @@ function Header() {
 
         eventSource.addEventListener("sse", async (event) => {
             try {
-                console.log("Raw event data:", event.data);  // 추가된 로그
+                console.log("Raw event data:", event.data); 
                 const parsedData = JSON.parse(event.data);
-                setNotifications(prev => [...prev, parsedData]);
+                setNotifications([parsedData]);
+                setShowNotifications(true);
                 console.log("Received message:", parsedData);
+
+                setTimeout(() => {
+                    setShowNotifications(false);
+                }, 5000);
+
             } catch (error) {
                 console.error("Failed to parse event data:", error);
             }
@@ -80,18 +87,6 @@ function Header() {
         setShowLogoutConfirm(false);
     };
 
-    const toggleNotifications = () => {
-        setShowNotifications(!showNotifications);
-    };
-
-    const markAsRead = (index) => {
-        setNotifications(notifications.map((notification, i) => 
-            i === index ? { ...notification, isRead: true } : notification
-        ));
-    };
-
-    const unreadCount = notifications.filter(notification => !notification.isRead).length;
-
     return (
         <>
             <div className="Header-Container">
@@ -122,12 +117,6 @@ function Header() {
                                     님
                                     <button onClick={handleLogout}>로그아웃</button>
                                 </li>
-                                {/* <li className="notification-icon">
-                                    <BsBellFill onClick={toggleNotifications} />
-                                    {unreadCount > 0 && (
-                                        <span className="notification-count">{unreadCount}</span>
-                                    )}
-                                </li> */}
                             </>
                         ) : (
                             <li>
@@ -137,16 +126,20 @@ function Header() {
                     </ul>
                 </nav>
             </div>
-            {showNotifications && (
-                <div className="notification-dropdown">
+            {showNotifications && notifications.length > 0 && (
+                <div className="notification-dropdown" onClick={()=>{navigate("/mypost")}}>
                     <ul>
-                        {notifications.map((notification, index) => (
-                            <li key={index} className={!notification.isRead ? 'unread' : ''} onClick={() => markAsRead(index)}>
-                                <p><strong>{notification.nickname}</strong></p>
-                                <p>{notification.content}</p>
-                                <p><Link to={notification.url}>Link</Link></p>
+                        {notifications[0].type === "SUCCESS" ? (
+                            <li className="notification-success">
+                                <AiOutlineSafety />
+                                <p>유해성 검사 통과 후 정상 업로드 되었습니다</p>
                             </li>
-                        ))}
+                        ) : (
+                            <li className="notification-warn">
+                                <TbExclamationMark />
+                                <p>유해성을 탐지하여 필터링 처리 되었습니다</p>
+                            </li>
+                        )}
                     </ul>
                 </div>
             )}
