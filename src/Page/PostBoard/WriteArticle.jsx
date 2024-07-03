@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // Quill의 스타일시트를 가져옵니다.
 import { useNavigate } from "react-router-dom";
 import MessageModal from "../../SideComponent/Modal/MessageModal";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
@@ -33,12 +35,12 @@ function WriteArticle() {
 
             const data = await response.json();
 
-            if (data.code === "M006" || data.code === "H001") {
-                setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
-                setIsModalOpen(true);
-                logout();
-                return;
-            }
+            // if (data.code === "M006" || data.code === "H001") {
+            //     setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
+            //     setIsModalOpen(true);
+            //     logout();
+            //     return;
+            // }
 
             if (!response.ok) {
                 console.log(data);
@@ -68,93 +70,9 @@ function WriteArticle() {
         }
     };
 
-    const handleCommand = (command, value = null) => {
-        document.execCommand(command, false, value);
-    };
-
-    const handleContentChange = async (e) => {
-        const htmlContent = e.target.innerHTML;
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, "text/html");
-
-        const textContent = doc.body.innerText;
-        const imgElements = Array.from(doc.querySelectorAll("img"));
-        let imgUrls = [];
-
-        for (const img of imgElements) {
-            if (img.src.startsWith("data:image")) {
-                const imgUrl = await uploadImage(img.src);
-                imgUrls.push(imgUrl);
-            } else {
-                imgUrls.push(img.src);
-            }
-        }
-
-        const combinedContent = `${textContent}\n${imgUrls.join("\n")}`;
-        setContent(combinedContent);
-    };
-
     const handleTitleChange = (e) => {
         setTitle(e.target.value);
     };
-
-    const uploadImage = async (base64Image) => {
-        const formData = new FormData();
-        const blob = await fetch(base64Image).then((res) => res.blob());
-        formData.append("file", blob);
-
-        try {
-            const response = await fetch("http://43.202.192.54:8080/api/files/upload", {
-                method: "POST",
-                body: formData,
-            });
-
-            const data = await response.json();
-
-            // if (data.code === "M006" || data.code === "H001") {
-            //     setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
-            //     setIsModalOpen(true);
-            //     logout();
-            //     return null;
-            // }
-
-            if (!response.ok) {
-                throw new Error("Image upload failed");
-            }
-
-            return data.url;
-        } catch (error) {
-            console.error("Error uploading image:", error);
-            return null;
-        }
-    };
-
-    const handlePaste = async (event) => {
-        const clipboardData = event.clipboardData;
-        if (clipboardData) {
-            const items = clipboardData.items;
-            for (let i = 0; i < items.length; i++) {
-                const item = items[i];
-                if (item.type.indexOf("image") !== -1) {
-                    const blob = item.getAsFile();
-                    const imgUrl = await uploadImage(blob);
-                    if (imgUrl) {
-                        const imgElement = `<img src="${imgUrl}" alt="uploaded image" />`;
-                        document.execCommand("insertHTML", false, imgElement);
-                        setContent((prevContent) => prevContent + "\n" + imgUrl);
-                    }
-                }
-            }
-        }
-    };
-
-    useEffect(() => {
-        const contentEditableElement = document.getElementById("content");
-        if (contentEditableElement) {
-            contentEditableElement.addEventListener("paste", handlePaste);
-            return () => contentEditableElement.removeEventListener("paste", handlePaste);
-        }
-    }, []);
 
     const handleModalClose = () => {
         setIsModalOpen(false);
@@ -163,6 +81,14 @@ function WriteArticle() {
         } else {
             navigate("/login");
         }
+    };
+
+    const modules = {
+        toolbar: [
+            ["bold", "italic", "underline"], // 볼드, 이탤릭, 밑줄
+            [{ color: [] }], // 글자 색상
+            [{ align: [] }], // 정렬
+        ],
     };
 
     return (
@@ -181,76 +107,12 @@ function WriteArticle() {
                             />
                         </div>
                         <div className="writePara">
-                            <div className="editorToolbar">
-                                <button type="button" onClick={() => handleCommand("bold")}>
-                                    <img className="boldimg" src="https://img.icons8.com/ios-filled/50/b.png" alt="B" />
-                                    <span>Bold</span>
-                                </button>
-                                <button type="button" onClick={() => handleCommand("italic")}>
-                                    <img
-                                        className="italicimg"
-                                        src="https://img.icons8.com/ios-filled/50/italic.png"
-                                        alt="I"
-                                    />
-                                    <span>Italic</span>
-                                </button>
-                                <button type="button" onClick={() => handleCommand("underline")}>
-                                    <img
-                                        className="underlineimg"
-                                        src="https://img.icons8.com/ios-filled/50/underline.png"
-                                        alt="U"
-                                    />
-                                    <span>Underline</span>
-                                </button>
-                                <button type="button" onClick={() => handleCommand("foreColor", "red")}>
-                                    <img
-                                        className="colorimg"
-                                        src="https://img.icons8.com/ios-filled/50/color-wheel.png"
-                                        alt="Color"
-                                    />
-                                    <span>Color</span>
-                                </button>
-                                <button type="button" onClick={() => handleCommand("justifyLeft")}>
-                                    <img
-                                        className="alignleftimg"
-                                        src="https://img.icons8.com/ios-filled/50/align-left.png"
-                                        alt="Left"
-                                    />
-                                    <span>Left</span>
-                                </button>
-                                <button type="button" onClick={() => handleCommand("justifyCenter")}>
-                                    <img
-                                        className="aligncenterimg"
-                                        src="https://img.icons8.com/ios-filled/50/align-center.png"
-                                        alt="Center"
-                                    />
-                                    <span>Center</span>
-                                </button>
-                                <button type="button" onClick={() => handleCommand("justifyRight")}>
-                                    <img
-                                        className="alignrightimg"
-                                        src="https://img.icons8.com/ios-filled/50/align-right.png"
-                                        alt="Right"
-                                    />
-                                    <span>Right</span>
-                                </button>
-                                <label htmlFor="fileInput" className="fileInputLabel">
-                                    <img
-                                        className="photoimg"
-                                        src="https://img.icons8.com/ios-filled/50/photo.png"
-                                        alt="Photo"
-                                    />
-                                    <span>Photo</span>
-                                </label>
-                            </div>
-                            <div
-                                id="content"
-                                className="contentEditable"
-                                contentEditable
-                                onInput={handleContentChange}
+                            <ReactQuill
+                                value={content}
+                                onChange={setContent}
+                                modules={modules}
                                 placeholder="내용을 입력하세요"
-                                suppressContentEditableWarning={true}
-                            ></div>
+                            />
                         </div>
                     </div>
                     <input type="submit" value="Submit" />
