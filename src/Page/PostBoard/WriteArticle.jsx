@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import MessageModal from '../../SideComponent/Modal/MessageModal';
+import MessageModal from "../../SideComponent/Modal/MessageModal";
 import { useAuth } from "../../SideComponent/Header/AuthContext";
 import "./WriteArticle.css";
 
@@ -16,7 +16,7 @@ function WriteArticle() {
         const token = localStorage.getItem("userToken");
 
         if (!token) {
-            setModalMessage('로그인이 필요한 서비스입니다.');
+            setModalMessage("로그인이 필요한 서비스입니다.");
             setIsModalOpen(true);
             return;
         }
@@ -34,7 +34,7 @@ function WriteArticle() {
             const data = await response.json();
 
             if (data.code === "M006" || data.code === "H001") {
-                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
+                setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
                 setIsModalOpen(true);
                 logout();
                 return;
@@ -46,13 +46,12 @@ function WriteArticle() {
             }
 
             console.log("Article posted successfully:", data);
-            setModalMessage('게시글 작성에 성공하였습니다!');
+            setModalMessage("게시글 작성에 성공하였습니다!");
             setIsModalOpen(true);
         } catch (error) {
             console.error("Error posting article:", error);
         }
     }
-
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -73,13 +72,23 @@ function WriteArticle() {
         document.execCommand(command, false, value);
     };
 
-    const handleContentChange = (e) => {
+    const handleContentChange = async (e) => {
         const htmlContent = e.target.innerHTML;
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, "text/html");
 
         const textContent = doc.body.innerText;
-        const imgUrls = Array.from(doc.querySelectorAll("img")).map((img) => img.src);
+        const imgElements = Array.from(doc.querySelectorAll("img"));
+        let imgUrls = [];
+
+        for (const img of imgElements) {
+            if (img.src.startsWith("data:image")) {
+                const imgUrl = await uploadImage(img.src);
+                imgUrls.push(imgUrl);
+            } else {
+                imgUrls.push(img.src);
+            }
+        }
 
         const combinedContent = `${textContent}\n${imgUrls.join("\n")}`;
         setContent(combinedContent);
@@ -89,9 +98,10 @@ function WriteArticle() {
         setTitle(e.target.value);
     };
 
-    const uploadImage = async (imageBlob) => {
+    const uploadImage = async (base64Image) => {
         const formData = new FormData();
-        formData.append("file", imageBlob);
+        const blob = await fetch(base64Image).then((res) => res.blob());
+        formData.append("file", blob);
 
         try {
             const response = await fetch("http://43.202.192.54:8080/api/files/upload", {
@@ -99,14 +109,14 @@ function WriteArticle() {
                 body: formData,
             });
 
-            const data = await response.json();
+            // const data = await response.json();
 
-            if (data.code === "M006" || data.code === "H001") {
-                setModalMessage('세션이 만료되었습니다. 다시 로그인 해주세요.');
-                setIsModalOpen(true);
-                logout();
-                return null;
-            }
+            // if (data.code === "M006" || data.code === "H001") {
+            //     setModalMessage("세션이 만료되었습니다. 다시 로그인 해주세요.");
+            //     setIsModalOpen(true);
+            //     logout();
+            //     return null;
+            // }
 
             if (!response.ok) {
                 throw new Error("Image upload failed");
@@ -148,7 +158,7 @@ function WriteArticle() {
 
     const handleModalClose = () => {
         setIsModalOpen(false);
-        if (modalMessage === '게시글 작성에 성공하였습니다!') {
+        if (modalMessage === "게시글 작성에 성공하였습니다!") {
             navigate("/post");
         } else {
             navigate("/login");
@@ -246,12 +256,7 @@ function WriteArticle() {
                     <input type="submit" value="Submit" />
                 </form>
             </div>
-            <MessageModal
-                message={modalMessage}
-                onClose={handleModalClose}
-                buttonText="확인"
-                isOpen={isModalOpen}
-            />
+            <MessageModal message={modalMessage} onClose={handleModalClose} buttonText="확인" isOpen={isModalOpen} />
         </>
     );
 }
